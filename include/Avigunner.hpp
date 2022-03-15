@@ -13,4 +13,5 @@ public:
 
 	void attack(vector<GameObject*>& gameobjs, bool charge, Direction d);
 	void applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input);
+	virtual GameObject createObject();
 };

@@ -192,3 +192,7 @@ void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& inpu
 	
 	Player::applyFrame(gameobjs, s, input);
 }
+
+virtual GameObject Avigunner::createObject() {
+	return new Avigunner();
+}

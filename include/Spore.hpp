@@ -20,4 +20,5 @@ public:
 
 	bool draw(vector<GameObject*>& gameobjs);
 	void customDraw(RenderWindow* window);
+	virtual GameObject createObject();
 };

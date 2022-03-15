@@ -132,3 +132,7 @@ void Vanshlicer::attack(vector<GameObject*>& gameobjs, bool charge, Direction d)
 	}
 	Player::attack(gameobjs, charge, d);
 }
+
+virtual GameObject Vanshlicer::createObject() {
+	return new Vanshlicer();
+}

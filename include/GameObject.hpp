@@ -14,4 +14,6 @@ public:
 	float yvel = 0;
 
 	virtual bool draw(vector<GameObject*>& gameobjs);
+
+	virtual GameObject createObject();
 };

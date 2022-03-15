@@ -85,3 +85,7 @@ void Spore::customDraw(RenderWindow* window) {
 	setRect();
 //	hitbox.draw(window, 255, 255, 0, 100);
 }
+
+virtual GameObject Spore::createObject() {
+	return new Spore();
+}

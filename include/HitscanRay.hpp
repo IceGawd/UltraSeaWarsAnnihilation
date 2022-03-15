@@ -15,6 +15,8 @@ public:
 	int fixIt(int i);
 	void customDraw(RenderWindow* window);
 
+	virtual GameObject createObject();
+
 	float originx = 0;
 	float originy = 0;
 

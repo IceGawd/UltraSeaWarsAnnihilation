@@ -55,3 +55,7 @@ void HitscanRay::customDraw(RenderWindow* window) {
 	window->drawLine((int) ((originx - window->x) * window->zoom), (int) ((originy - window->y) * window->zoom), (int) ((destx - window->x) * window->zoom), (int) ((desty - window->y) * window->zoom));
 //	cout << "EndCustomDraw\n";
 }
+
+virtual GameObject HitscanRay::createObject() {
+	return new HitscanRay();
+}

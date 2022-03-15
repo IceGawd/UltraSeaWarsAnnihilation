@@ -553,3 +553,7 @@ void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 //	cout << "bro...\n";
 	attackNumber++;
 }
+
+virtual GameObject Player::createObject() {
+	return new Player();
+}

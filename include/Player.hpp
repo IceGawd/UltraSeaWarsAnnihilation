@@ -83,7 +83,7 @@ public:
 	float getAngle();
 	void damage(DamageInfo& damageinfo, Player* attacker);
 	virtual void attack(vector<GameObject*>& gameobjs, bool charge, Direction d);
-
+	virtual GameObject createObject();
 
 	inline bool wasDown(Direction d) {
 		return (d == DOWN_LEFT || d == DOWN || d == DOWN_RIGHT);

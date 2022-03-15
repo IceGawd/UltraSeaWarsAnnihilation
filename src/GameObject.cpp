@@ -10,3 +10,7 @@ bool GameObject::draw(vector<GameObject*>& gameobjs) {
 
 	return false;
 }
+
+virtual GameObject GameObject::createObject() {
+	return new GameObject();
+}
