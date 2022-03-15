@@ -5,6 +5,10 @@
 
 using namespace std;
 
+Vanshlicer::Vanshlicer() {
+
+}
+
 Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER, p) {
 	texture = window.loadTexture("res/gfx/Vanshlicer.png");
 	width = 255;
@@ -133,6 +137,6 @@ void Vanshlicer::attack(vector<GameObject*>& gameobjs, bool charge, Direction d)
 	Player::attack(gameobjs, charge, d);
 }
 
-virtual GameObject Vanshlicer::createObject() {
+GameObject* Vanshlicer::createObject() {
 	return new Vanshlicer();
 }

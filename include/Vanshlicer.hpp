@@ -7,7 +7,9 @@
 
 class Vanshlicer : public Player {
 public:
+	Vanshlicer();
 	Vanshlicer(RenderWindow& window, Controllers p);
 
 	void attack(vector<GameObject*>& gameobjs, bool charge, Direction d);
+	virtual GameObject* createObject();
 };

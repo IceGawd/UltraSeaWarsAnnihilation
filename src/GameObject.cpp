@@ -4,6 +4,10 @@
 
 using namespace std;
 
+GameObject::GameObject() {
+	
+}
+
 bool GameObject::draw(vector<GameObject*>& gameobjs) {
 	x += xvel;
 	y += yvel;
@@ -11,6 +15,6 @@ bool GameObject::draw(vector<GameObject*>& gameobjs) {
 	return false;
 }
 
-virtual GameObject GameObject::createObject() {
+GameObject* GameObject::createObject() {
 	return new GameObject();
 }

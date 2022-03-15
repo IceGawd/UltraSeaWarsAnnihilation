@@ -7,6 +7,7 @@
 
 class Spore : public GameObject {
 public:
+	Spore();
 	Spore(float xtemp, float ytemp, float xv, float yv, int s, int e, int g, DamageInfo di, const char* t);
 
 	int survivalFrames = 0;
@@ -20,5 +21,5 @@ public:
 
 	bool draw(vector<GameObject*>& gameobjs);
 	void customDraw(RenderWindow* window);
-	virtual GameObject createObject();
+	virtual GameObject* createObject();
 };

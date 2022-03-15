@@ -64,8 +64,8 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		while (s->collidesWith(c)) {
 			onGround = true;
 			angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel + imageDimentions[animationtype][animationFrame][1] / 2);
-//			cout << "angel: " << angle << endl;
-//			cout << s->collidesWith(c) << endl;
+			cout << "angel: " << angle << endl;
+			cout << s->collidesWith(c) << endl;
 			x += 5 * cos(angle);
 			y -= 5 * sin(angle);
 			c.x += 5 * cos(angle);
@@ -554,6 +554,6 @@ void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 	attackNumber++;
 }
 
-virtual GameObject Player::createObject() {
+GameObject* Player::createObject() {
 	return new Player();
 }

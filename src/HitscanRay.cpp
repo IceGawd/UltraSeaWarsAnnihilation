@@ -2,6 +2,10 @@
 
 using namespace std;
 
+HitscanRay::HitscanRay() {
+	
+}
+
 HitscanRay::HitscanRay(float x, float y, float a, int g, DamageInfo di) : originx(x), destx(x), originy(y), desty(y), angle(a), gameobjPlacement(g), damageinfo(di) {}
 
 int HitscanRay::fixIt(int i) {
@@ -56,6 +60,6 @@ void HitscanRay::customDraw(RenderWindow* window) {
 //	cout << "EndCustomDraw\n";
 }
 
-virtual GameObject HitscanRay::createObject() {
+GameObject* HitscanRay::createObject() {
 	return new HitscanRay();
 }

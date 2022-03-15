@@ -2,6 +2,10 @@
 
 using namespace std;
 
+Avigunner::Avigunner() {
+	
+}
+
 Avigunner::Avigunner(RenderWindow& window, Controllers p) : Player(AVIGUNNER, p) {
 	texture = window.loadTexture("res/gfx/Avigunner.png");
 	width = 224;
@@ -193,6 +197,6 @@ void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& inpu
 	Player::applyFrame(gameobjs, s, input);
 }
 
-virtual GameObject Avigunner::createObject() {
+GameObject* Avigunner::createObject() {
 	return new Avigunner();
 }

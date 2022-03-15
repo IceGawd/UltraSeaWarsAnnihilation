@@ -6,6 +6,10 @@
 
 using namespace std;
 
+Spore::Spore() {
+
+}
+
 Spore::Spore(float xtemp, float ytemp, float xv, float yv, int s, int e, int g, DamageInfo di, const char* t) {
 	x = xtemp;
 	y = ytemp;
@@ -86,6 +90,6 @@ void Spore::customDraw(RenderWindow* window) {
 //	hitbox.draw(window, 255, 255, 0, 100);
 }
 
-virtual GameObject Spore::createObject() {
+GameObject* Spore::createObject() {
 	return new Spore();
 }
