@@ -70,9 +70,9 @@ Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER,
 		}, 
 		{
 			{160, 250}, 
-			{120, 289}, 
+			{120, 243}, 
 			{160, 250}, 
-			{120, 284}
+			{120, 243}
 		}
 	};
 

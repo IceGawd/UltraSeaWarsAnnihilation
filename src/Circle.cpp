@@ -29,5 +29,5 @@ void Circle::draw(RenderWindow* window, int r, int g, int b, int a) {
 //	cout << "CIRLCE X: " << x << " Y: " << y << endl;
 //	cout << "BASEX: " << basex << " BASEY: " << basey << endl;
 	window->setColor(r, g, b, a);
-	window->drawCircle((x - window->x) * window->zoom, (y - window->y) * window->zoom, radius);
+	window->drawCircle((x - window->x) * window->zoom, (y - window->y) * window->zoom, radius * window->zoom);
 }

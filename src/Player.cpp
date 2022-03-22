@@ -58,14 +58,19 @@ float Player::getAngle(Direction d) {
 
 void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	onGround = false;
-//	cout << "EL AM AY OW" << endl;
+	// cout << "EL AM AY OW" << endl;
 	for (Circle& c : hitboxes) {
 		float angle;
 		while (s->collidesWith(c)) {
-			onGround = true;
-			angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel + imageDimentions[animationtype][animationFrame][1] / 2);
-			cout << "angel: " << angle << endl;
-			cout << s->collidesWith(c) << endl;
+			// angle = s->angleFrom(x - xvel + c.basex, y - yvel - (2 * c.radius) + c.basey);
+			angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel - (2 * c.radius) + imageDimentions[animationtype][animationFrame][1]);
+			// angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel + imageDimentions[animationtype][animationFrame][1] / 2);
+			// cout << "angel: " << angle << endl;
+			// cout << s->collidesWith(c) << endl;
+
+			if (abs(angle - M_PI / 2) < M_PI / 2) {
+				onGround = true;
+			}
 			x += 5 * cos(angle);
 			y -= 5 * sin(angle);
 			c.x += 5 * cos(angle);
