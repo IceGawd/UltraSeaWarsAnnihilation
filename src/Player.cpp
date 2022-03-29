@@ -59,11 +59,14 @@ float Player::getAngle(Direction d) {
 void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	onGround = false;
 	// cout << "EL AM AY OW" << endl;
-	for (Circle& c : hitboxes) {
+	// cout << "x: " << x << " y: " << y << " xvel: " << xvel << " yvel: " << yvel << endl;
+	for (int tempnum = hitboxes.size() - 1; tempnum >= 0; tempnum--) {
+		Circle& c = hitboxes.at(tempnum);
 		float angle;
 		while (s->collidesWith(c)) {
-			// angle = s->angleFrom(x - xvel + c.basex, y - yvel - (2 * c.radius) + c.basey);
-			angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel - (2 * c.radius) + imageDimentions[animationtype][animationFrame][1]);
+			// cout << "x: " << x << " y: " << y << " c.x: " << c.x << " c.y: " << c.y << " xvel: " << xvel << " yvel: " << yvel << endl;
+			angle = s->angleFrom(c.x, c.y, c.x - xvel, c.y - yvel);
+			// angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel - (2 * c.radius) + imageDimentions[animationtype][animationFrame][1]);
 			// angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel + imageDimentions[animationtype][animationFrame][1] / 2);
 			// cout << "angel: " << angle << endl;
 			// cout << s->collidesWith(c) << endl;
@@ -394,6 +397,8 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		modifier += 2;
 	}
 
+
+
 	for (int z = 0; z < baseHitboxes.size(); z++) {
 		Circle& c = hitboxes[z];
 		c = baseHitboxes[z] + hitboxChanges[animationtype][animationFrame][z];
@@ -420,14 +425,17 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 //				cout << "c\n";
 			}
 		}
+	}
 
-		// DEATH
-		if (abs(x - 600) > 2000 || abs(y - 600) > 2000) {
-			spawn();
-			invulnerability = 120;
-			percent = 0;
-			stale.clear();
-		}
+	// DEATH
+	if (abs(x - 600) > 2000 || abs(y - 600) > 2000) {
+		cout << "DEATH" << endl;
+		// cout << "x: " << x << " y: " << y << " xvel: " << xvel << " yvel: " << yvel << endl;
+		spawn();
+		invulnerability = 120;
+		percent = 0;
+		stale.clear();
+		// cout << 0 / 0 << endl;
 	}
 
 	setRect();

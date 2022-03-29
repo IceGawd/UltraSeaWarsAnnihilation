@@ -43,7 +43,7 @@ public:
 	int airDodgeSpeed;
 	float hitstunModifier;
 
-	vector<Circle> baseHitboxes;
+	vector<Circle> baseHitboxes; // HAS TO GO FROM BOTTOM TO TOP
 	vector<Circle> hitboxes;	
 	vector<vector<vector<Circle>>> hitboxChanges = {};
 	vector<vector<vector<int>>> imageDimentions;	
