@@ -22,7 +22,6 @@ struct GamePad {
 inline void printInputs(Inputs& input) {
 	cout << "RIGHT: " << input.moveright << endl;
 	cout << "LEFT: " << input.moveleft << endl;
-	cout << "DASH: " << input.dash << endl;
 	cout << "DIRECTION: " << input.direction << endl;
 }
 
@@ -69,9 +68,6 @@ void localInputs(Player* player, const GamePad& controllerInput, const GamePad& 
 
 		if (xaxis > 20000) {
 			thisFrame.moveright = true;
-			if (xaxis > 30000 && xprev < 30000) {
-				thisFrame.dash = true;
-			}
 		}
 	}
 	else if (xaxis < -10000) {
@@ -86,9 +82,6 @@ void localInputs(Player* player, const GamePad& controllerInput, const GamePad& 
 		}
 		if (xaxis < -20000) {
 			thisFrame.moveleft = true;
-			if (xaxis < -30000 && xprev > -30000) {
-				thisFrame.dash = true;
-			}
 		}
 	}
 	else {
@@ -282,12 +275,6 @@ void runGame() {
 //						cout << "d\n"; 
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = 25000;
 					}
-					if (kc == SDLK_q) {
-						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = -32768;
-					}
-					if (kc == SDLK_e) {
-						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = 32767;
-					}
 					break;
 
 				case SDL_KEYUP:
@@ -300,16 +287,12 @@ void runGame() {
 					if (kc == SDLK_s && controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTY] > 0) {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTY] = 0;
 					}
-					if ((kc == SDLK_a || kc == SDLK_q) && controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] < 0) {
+					if (kc == SDLK_a && controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] < 0) {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = 0;
 					}
-					if ((kc == SDLK_d || kc == SDLK_e) && controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] > 0) {
+					if (kc == SDLK_d && controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] > 0) {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = 0;
 					}
-					if (kc == SDLK_l) {
-						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_TRIGGERLEFT] = 0;
-					}
-
 					break;
 /*
 				// This happens when a device is added

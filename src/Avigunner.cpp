@@ -13,11 +13,9 @@ Avigunner::Avigunner(RenderWindow& window, Controllers p) : Player(AVIGUNNER, p)
 	show_width = 224;
 	show_height = 280;
 	walkspeed = 4;
-	dashspeed = 30;
 	jumpspeed = 120;
 	fallspeed = 6;
 	jumpSquat = 4;
-	dashlag = 5;
 	shorthop = 0.4f;
 	drag = 0.8f;
 	friction = 0.85f;
@@ -26,9 +24,6 @@ Avigunner::Avigunner(RenderWindow& window, Controllers p) : Player(AVIGUNNER, p)
 	maxjumps = 2;
 	turnAround = 4;
 	landinglag = 4;
-	airDodgeTime = 12;
-	airDodgeLag = 16;
-	airDodgeSpeed = 40;
 	hitstunModifier = 0.6;
 
 	animationLength[JAB] = 8;

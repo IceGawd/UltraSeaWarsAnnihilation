@@ -117,30 +117,17 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		attack(gameobjs, true, input.direction);
 	}
 
-	if (lag <= 0 || type == DASH) {
-		if (lag > 0 && type == DASH) {
-			lag--;
-		}
+	if (lag <= 0) {
 		if (onGround && wasDown(input.direction)) {
 			xvel *= slowDown;
 		}
 		// ACTIVE
 		if (input.moveright) {
-			if (framesNeutral < dashlag && framesNeutral != 0) {
-				input.dash = true;
-			}
-
 			if (!facingRight && onGround) {
 				if (wasDown(previous) || !wasDown(input.direction)) {
 //					cout << "Failure: " << previous << endl;
 					lag = turnAround;
 					type = TURNAROUND;
-				}
-				else {
-//					cout << "Success: " << previous << endl;
-					cout << "TECH: TCR\n";
-					facingRight = !facingRight;
-					// TECH: Turn Cancel
 				}
 			}
 			else {
@@ -148,9 +135,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			}
 		}
 		else if (input.moveleft) {
-			if (framesNeutral < dashlag && framesNeutral != 0) {
-				input.dash = true;
-			}
 			if (facingRight && onGround) {
 				if (wasDown(previous) || !wasDown(input.direction)) {
 					// cout << "Failure: " << previous << endl;
@@ -168,18 +152,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 				xvel -= walkspeed;
 			}
 		}
-		if (input.dash && (lag == 0 || (facingRight != wasRight(input.direction)))) {
-//			cout << "DASH!\n";
-//			cout << "Lag: " << lag << "\n";
-			if (wasRight(input.direction)) {
-				xvel += dashspeed;
-			}
-			else {
-				xvel -= dashspeed;
-			}
-			lag = dashlag;
-			type = DASH;
-		}
 		if (input.jumpPressed) {
 			if (onGround) {
 				lag = jumpSquat;
@@ -193,11 +165,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			}
 		}
 //		cout << "Lag: " << lag << endl;
-		if (lag == dashlag && type == DASH && !wasUp(previous) && wasUp(input.direction)) {
-			lag = 0;
-			// TECH: Dash Lag Cancel
-			cout << "TECH: DLC\n";
-		}
 		if (input.quick) {
 			attack(gameobjs, false, input.direction);
 		}
@@ -224,14 +191,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 				case TURNAROUND:
 					facingRight = !facingRight;
 					break;
-				case SPOTDODGE:
-					lag = airDodgeTime;
-					type = DASH;
-					break;
-				case AIRDODGE:
-					lag = airDodgeLag + airDodgeTime;
-					type = DASH;
-					break;
 			}
 			if (type == CHARGE) {
 				type = CHARGE;
@@ -239,9 +198,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			else {
 				type = NONE;
 			}
-		}
-		if (onGround && type == AIRDODGE) {
-			lag = 0;
 		}
 	}
 
@@ -305,11 +261,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		case TURNAROUND:
 			animationtype = TURN;
 			animationFrame = (turnAround - lag) * animationLength[TURN] / turnAround;
-			break;
-		case AIRDODGE:
-		case SPOTDODGE:
-			animationtype = TURN;
-			animationFrame = (airDodgeLag - lag) * animationLength[TURN] / airDodgeLag;
 			break;
 		case ATTACK:
 			animationtype = JAB;

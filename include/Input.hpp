@@ -22,7 +22,6 @@ enum Direction {
 struct Inputs {
 	bool moveright = false;
 	bool moveleft = false;
-	bool dash = false;
 	Direction direction = NEUTRAL;
 	bool quick = false;
 	bool charge = false;

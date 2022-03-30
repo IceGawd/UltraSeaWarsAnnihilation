@@ -16,11 +16,9 @@ Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER,
 	show_width = 255;
 	show_height = 250;
 	walkspeed = 3;
-	dashspeed = 40;
 	jumpspeed = 100;
 	fallspeed = 5;
 	jumpSquat = 4;
-	dashlag = 10;
 	shorthop = 0.5f;
 	drag = 0.85f;
 	friction = 0.9f;
@@ -29,9 +27,6 @@ Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER,
 	maxjumps = 2;
 	turnAround = 4;
 	landinglag = 8;
-	airDodgeTime = 16;
-	airDodgeLag = 24;
-	airDodgeSpeed = 30;
 	hitstunModifier = 0.5;
 
 	animationLength[JAB] = 8;

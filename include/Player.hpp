@@ -25,11 +25,9 @@ public:
 	list<Inputs> inputQueue = {{}};
 	list<Inputs> rollback = {};
 	int walkspeed;
-	int dashspeed;
 	int jumpspeed;
 	int fallspeed;
 	int jumpSquat;
-	int dashlag;
 	int turnAround;
 	float shorthop;
 	float drag;
@@ -38,9 +36,6 @@ public:
 	float slowDown;
 	int maxjumps;
 	int landinglag;
-	int airDodgeTime;
-	int airDodgeLag;
-	int airDodgeSpeed;
 	float hitstunModifier;
 
 	vector<Circle> baseHitboxes; // HAS TO GO FROM BOTTOM TO TOP
