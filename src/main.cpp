@@ -111,12 +111,6 @@ void localInputs(Player* player, const GamePad& controllerInput, const GamePad& 
 			thisFrame.jumpPressed = true;
 		}
 	}
-	if (controllerInput.axis[SDL_CONTROLLER_AXIS_TRIGGERLEFT] + controllerInput.axis[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > 30000) {
-		thisFrame.shield = true;
-		if (lastControllerInput.axis[SDL_CONTROLLER_AXIS_TRIGGERLEFT] + lastControllerInput.axis[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] < 30000) {
-			thisFrame.shieldPressed = true;
-		}
-	}
 
 	player->inputQueue.push_back(thisFrame);
 }
@@ -264,10 +258,16 @@ void runGame() {
 					if (keymap.find(kc) != keymap.end()) {
 						controllerInputs[numGamepads].buttons[keymap[kc]] = true;
 					}
+					/*
+					if (kc == SDLK_t) {
+						cout << "Point back roll" << endl;
+						deepCopy(gameobjs, rollbackpoint);
+					}
 					if (kc == SDLK_r) {
 						cout << "RBP" << endl;
 						deepCopy(rollbackpoint, gameobjs);
 					}
+					*/
 					if (kc == SDLK_w) {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTY] = -25000;
 					}
@@ -287,9 +287,6 @@ void runGame() {
 					}
 					if (kc == SDLK_e) {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = 32767;
-					}
-					if (kc == SDLK_l) {
-						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_TRIGGERLEFT] = 32767;
 					}
 					break;
 
@@ -380,7 +377,7 @@ void runGame() {
 			list<Inputs>& player1Rollback = player1->rollback;
 			list<Inputs>& player2Rollback = player2->rollback;
 			InputMethod& p1input = player1->inputs;
-			InputMethod& p2input = player2->inputs;			
+			InputMethod& p2input = player2->inputs;
 
 			// GET INPUTS
 			for (int i = 0; i <= numGamepads; i++) {

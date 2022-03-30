@@ -99,13 +99,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			lag = 0;
 			// TECH: Landing Lag Cancel
 		}
-		else if (lag == 0 && input.shieldPressed) {
-			cout << "TECH: SL\n";
-			invulnerability = airDodgeTime;
-			lag = landinglag;
-			type = LAND;
-			// TECH: Safe Land			
-		}
 		else {
 			lag = landinglag;
 			type = LAND;
@@ -160,12 +153,12 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			}
 			if (facingRight && onGround) {
 				if (wasDown(previous) || !wasDown(input.direction)) {
-//					cout << "Failure: " << previous << endl;
+					// cout << "Failure: " << previous << endl;
 					lag = turnAround;
 					type = TURNAROUND;
 				}
 				else {
-//					cout << "Success: " << previous << endl;
+					// cout << "Success: " << previous << endl;
 					cout << "TECH: TCL\n";
 					facingRight = !facingRight;
 					// TECH: Turn Cancel
@@ -200,59 +193,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			}
 		}
 //		cout << "Lag: " << lag << endl;
-		if (input.shield && lag == 0) {
-			if (onGround) {
-				if (input.shieldPressed && wasDown(input.direction)) {
-					cout << "SPOT_DODGE!" << endl;
-					lag = airDodgeLag;
-					invulnerability = airDodgeTime;
-					type = SPOTDODGE;
-				}
-				else {
-					cout << "GROUND_SHIELD!" << endl;
-					// GROUND SHIELD
-				}
-			}
-			else if (input.shieldPressed) {
-				cout << "AIRDODGE!" << endl;
-				// AIRDODGE
-				lag = airDodgeLag;
-				invulnerability = airDodgeTime;
-				type = AIRDODGE;
-
-				bool vertical = false;
-				bool horizontal = false;
-				float xvelchange = 0;
-				float yvelchange = 0;
-
-				if (wasRight(input.direction)) {
-					horizontal = true;
-					xvelchange = airDodgeSpeed;
-				}
-				else if (wasLeft(input.direction)) {
-					horizontal = true;
-					xvelchange = -airDodgeSpeed;
-				}
-
-				if (wasDown(input.direction)) {
-					vertical = true;
-					yvelchange = airDodgeSpeed;
-				}
-				else if (wasUp(input.direction)) {
-					vertical = true;
-					yvelchange = -airDodgeSpeed;
-				}
-
-				if (!vertical) {
-					xvelchange *= SQRT2;
-				}
-				if (!horizontal) {
-					yvelchange *= SQRT2;
-				}
-				xvel = xvelchange;
-				yvel = yvelchange;
-			}
-		}
 		if (lag == dashlag && type == DASH && !wasUp(previous) && wasUp(input.direction)) {
 			lag = 0;
 			// TECH: Dash Lag Cancel

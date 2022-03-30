@@ -4,6 +4,12 @@
 
 using namespace std;
 
+Entity::~Entity() {
+	cout << "lmao gone" << endl;
+	SDL_DestroyTexture(texture);
+}
+
+
 Entity::Entity() : x(0), y(0) {
 
 }

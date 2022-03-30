@@ -69,6 +69,15 @@ bool Spore::draw(vector<GameObject*>& gameobjs) {
 				toHit->damage(damageinfo, owner);
 				survivalFrames = -explosionLength;
 			}
+			/*
+			c = owner->collides(hitbox);
+			if (c != nullptr) {
+				damageinfo.setAngle(damageinfo.angle, atan((y - c->y) / (x - c->x)), owner->getAngle());
+				owner->xvel += damageinfo.baseknockback * cos(damageinfo.angle);
+				owner->yvel += damageinfo.baseknockback * sin(damageinfo.angle);
+				survivalFrames = -explosionLength;
+			}
+			*/
 		}
 	}
 

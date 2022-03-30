@@ -9,6 +9,7 @@ class RenderWindow;
 class Entity {
 public:
 	Entity();
+	~Entity();
 	Entity(float px, float py, SDL_Texture* ptexture);
 	Entity(float px, float py, SDL_Texture* ptexture, int pw, int ph);
 	void setRect();
