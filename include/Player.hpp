@@ -54,14 +54,13 @@ public:
 	bool wasOnGround = false;
 	bool facingRight = true;
 	bool fastFalling = false;
-	int framesNeutral = 0;
 	int invulnerability = 0;
 	double percent = 0;
 	Move inUse;
 	int attackNumber = 0;
 	int lastAttackNumHitBy = -1;
 
-	Direction previous = NEUTRAL;
+	Direction previous;
 	static const int INVULNFLASHTIME = 1;
 	static const int CHARGEMAX = 120;
 	static constexpr float SQRT2 = (float) sqrt(2);
@@ -70,29 +69,27 @@ public:
 	Player(Character c, Controllers p);
 	void spawn();
 	void zeroInitializeHitboxes();
-	float getAngle(Direction d);
 	virtual void applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input);
 	Circle* collides(int x, int y);
 	Circle* collides(Circle& c2);
 	float angleBetween(int tempx, int tempy);
-	float getAngle();
 	void damage(DamageInfo& damageinfo, Player* attacker);
 	virtual void attack(vector<GameObject*>& gameobjs, bool charge, Direction d);
 	virtual GameObject* createObject();
 
-	inline bool wasDown(Direction d) {
-		return (d == DOWN_LEFT || d == DOWN || d == DOWN_RIGHT);
+	inline bool wasDown(Direction& d) {
+		return d.magnitude > 0.1 && ((d.angle > 5 * M_PI / 4) || (d.angle < -M_PI / 4));
 	}
 
-	inline bool wasUp(Direction d) {
-		return (d == UP_LEFT || d == UP || d == UP_RIGHT);
+	inline bool wasUp(Direction& d) {
+		return d.magnitude > 0.1 && ((3 * M_PI / 4 > d.angle) && (d.angle > M_PI / 4));
 	}
 
-	inline bool wasRight(Direction d) {
-		return (d == UP_RIGHT || d == RIGHT || d == DOWN_RIGHT);
+	inline bool wasRight(Direction& d) {
+		return d.magnitude > 0.1 && ((M_PI / 4 >= d.angle) && (d.angle >= -M_PI / 4));
 	}
 
-	inline bool wasLeft(Direction d) {
-		return (d == UP_LEFT || d == LEFT || d == DOWN_LEFT);
+	inline bool wasLeft(Direction& d) {
+		return d.magnitude > 0.1 && ((5 * M_PI / 4 >= d.angle) && (d.angle >= 3 * M_PI / 4));
 	}
 };

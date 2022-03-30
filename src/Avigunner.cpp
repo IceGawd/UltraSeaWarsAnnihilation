@@ -115,7 +115,18 @@ void Avigunner::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) 
 				lag = 5;
 				type = ATTACK;
 
-				float angle = getAngle(d);
+				float angle = d.angle;
+
+				if (facingRight) { 
+					if (!wasRight(d)) {
+						angle = 0;
+					}
+				}
+				else {
+					if (!wasLeft(d)) {
+						angle = M_PI;
+					}
+				}
 				float maxanglemod = (M_PI * this->charge) / (2.0 * CHARGEMAX);
 
 				float xtemp = x;
@@ -123,12 +134,12 @@ void Avigunner::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) 
 				float shotsFired = this->charge / 5;
 
 				for (int z = 0; z < shotsFired; z++) {
-//					cout << "arg: " << (angle + maxanglemod * (0.5 - (z / shotsFired))) << endl;
+					// cout << "arg: " << (angle + maxanglemod * (0.5 - (z / shotsFired))) << endl;
 					gameobjs.push_back(new HitscanRay(xtemp, y + 150, (angle + maxanglemod * (0.5 - (z / shotsFired))), playerNum, DamageInfo(1, 30, 0.6, 0)));
 				}
 			}
 			if (inUse == BackCharge) {
-				float angle = M_PI - getAngle(d);
+				float angle = d.angle;
 				float maxanglemod = (M_PI * this->charge) / (1.5 * CHARGEMAX);
 
 				float xtemp = x;
@@ -160,7 +171,7 @@ void Avigunner::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) 
 				type = ATTACK;
 				inUse = ForwardQuick;
 			}
-			if (d == DOWN) {
+			if (wasDown(d)) {
 				lag = 8;
 				type = ATTACK;
 				inUse = DownQuick;				
@@ -177,7 +188,7 @@ void Avigunner::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) 
 void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	if (type == ATTACK) {
 		if (inUse == ForwardQuick && lag == 5) {
-			float angle = getAngle(input.direction);
+			float angle = input.direction.angle;
 			float xtemp = x;
 			if (facingRight) {xtemp += 170;} else {}
 			gameobjs.push_back(new HitscanRay(xtemp, y + 150, angle, playerNum, DamageInfo(1, 0, 0, 0)));

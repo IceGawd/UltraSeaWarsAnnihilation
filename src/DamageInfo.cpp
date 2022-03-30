@@ -14,16 +14,18 @@ float DamageInfo::angleDifference(float angle1, float angle2) {
 	return (actualDifference > M_PI) ? (pi2 - actualDifference) : actualDifference;
 }
 
-void DamageInfo::setAngle(float initialangle, float attackangle, float diangle) {
+void DamageInfo::setAngle(float initialangle, float attackangle, Direction& diangle) {
 //	cout << "a1.5\n";
-	float x = 3 * cos(initialangle) + cos(attackangle) + cos(diangle);
-	float y = 3 * sin(initialangle) + sin(attackangle) + sin(diangle);
+	float x = 3 * cos(initialangle) + cos(attackangle) + diangle.magnitude * cos(diangle.angle);
+	float y = 3 * sin(initialangle) + sin(attackangle) + diangle.magnitude * sin(diangle.angle);
 
+	/*
 	if (abs(diangle - M_PI) < 0.01) {
 //		cout << "uwu\n";
 		x -= cos(diangle);
 		y -= sin(diangle);
 	}
+	*/
 
 //	cout << "aa: " << attackangle << endl;
 //	cout << "di: " << diangle << endl;

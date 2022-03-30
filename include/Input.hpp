@@ -7,22 +7,13 @@ enum Controllers {
 	PLAYER4
 };
 
-enum Direction {
-	NEUTRAL, 
-	UP,
-	UP_RIGHT,
-	RIGHT,
-	DOWN_RIGHT,
-	DOWN,
-	DOWN_LEFT,
-	LEFT, 
-	UP_LEFT
+struct Direction {
+	float angle = 0;
+	float magnitude = 0;
 };
 
 struct Inputs {
-	bool moveright = false;
-	bool moveleft = false;
-	Direction direction = NEUTRAL;
+	Direction direction;
 	bool quick = false;
 	bool charge = false;
 	bool jump = false;
@@ -47,10 +38,7 @@ enum Lag {
 	JUMP,
 	TURNAROUND,
 	ATTACK,
-	DASH,
 	LAND,
-	AIRDODGE, 
-	SPOTDODGE, 
 	CHARGE, 
 };
 

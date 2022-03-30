@@ -40,22 +40,6 @@ void Player::zeroInitializeHitboxes() {
 	}
 }
 
-float Player::getAngle(Direction d) {
-	float angle = (facingRight) ? 0 : 1;
-	if (wasDown(d) || wasUp(d)) {
-		if (wasDown(d) == facingRight) {
-			angle += 0.25;
-		}
-		else {
-			angle -= 0.25;
-		}
-	}
-
-	angle *= M_PI;
-	return angle;
-}
-
-
 void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	onGround = false;
 	// cout << "EL AM AY OW" << endl;
@@ -122,34 +106,39 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			xvel *= slowDown;
 		}
 		// ACTIVE
-		if (input.moveright) {
-			if (!facingRight && onGround) {
-				if (wasDown(previous) || !wasDown(input.direction)) {
-//					cout << "Failure: " << previous << endl;
-					lag = turnAround;
-					type = TURNAROUND;
-				}
-			}
-			else {
-				xvel += walkspeed;
-			}
-		}
-		else if (input.moveleft) {
-			if (facingRight && onGround) {
-				if (wasDown(previous) || !wasDown(input.direction)) {
-					// cout << "Failure: " << previous << endl;
-					lag = turnAround;
-					type = TURNAROUND;
+		if (input.direction.magnitude > 0.75) {
+			// cout << "high: " << M_PI / 4 << endl;
+			// cout << "val: " << input.direction.angle << endl;
+			// cout << "low: " << M_PI / -4 << endl;
+			if (wasRight(input.direction)) {
+				if (!facingRight && onGround) {
+					if (wasDown(previous) || !wasDown(input.direction)) {
+	//					cout << "Failure: " << previous << endl;
+						lag = turnAround;
+						type = TURNAROUND;
+					}
 				}
 				else {
-					// cout << "Success: " << previous << endl;
-					cout << "TECH: TCL\n";
-					facingRight = !facingRight;
-					// TECH: Turn Cancel
+					xvel += walkspeed;
 				}
 			}
-			else {
-				xvel -= walkspeed;
+			else if (wasLeft(input.direction)) {
+				if (facingRight && onGround) {
+					if (wasDown(previous) || !wasDown(input.direction)) {
+						// cout << "Failure: " << previous << endl;
+						lag = turnAround;
+						type = TURNAROUND;
+					}
+					else {
+						// cout << "Success: " << previous << endl;
+						cout << "TECH: TCL\n";
+						facingRight = !facingRight;
+						// TECH: Turn Cancel
+					}
+				}
+				else {
+					xvel -= walkspeed;
+				}
 			}
 		}
 		if (input.jumpPressed) {
@@ -232,13 +221,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		xvel *= drag;
 		yvel *= drag;
 	}
-	if (input.direction == NEUTRAL) {
-		framesNeutral++;
-	}
-	else {
-//		cout << framesNeutral << endl;
-		framesNeutral = 0;
-	}
 
 	previous = input.direction;
 	wasOnGround = onGround;
@@ -310,7 +292,7 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 //				cout << &c << endl;
 //				cout << c.onHit << endl;
 //				cout << c.onHit->angle << endl;
-				c.onHit.setAngle(c.onHit.angle, opponent->angleBetween(c.x, c.y), opponent->getAngle());
+				c.onHit.setAngle(c.onHit.angle, opponent->angleBetween(c.x, c.y), opponent->previous);
 //				cout << "b\n";
 				opponent->damage(c.onHit, this);
 //				cout << "c\n";
@@ -367,38 +349,6 @@ float Player::angleBetween(int tempx, int tempy) {
 		angle += M_PI;
 	}
 	return angle;
-}
-
-float Player::getAngle() {
-	float temp = 0;
-	switch (previous) {
-		case NEUTRAL:
-			temp = 1; // PI IS A NEUTRAL ANGLE
-			break;
-		case UP:
-			temp = 0.5;
-			break;
-		case UP_RIGHT:
-			temp = 0.25;
-			break;
-		case DOWN_RIGHT:
-			temp = -0.25;
-			break;
-		case DOWN:
-			temp = -0.5;
-			break;
-		case DOWN_LEFT:
-			temp = -0.75;
-			break;
-		case LEFT:
-			temp = -1;
-			break;
-		case UP_LEFT:
-			temp = -1.25;
-			break;
-	}
-
-	return temp * M_PI;
 }
 
 void Player::damage(DamageInfo& damageinfo, Player* attacker) {

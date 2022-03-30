@@ -18,7 +18,7 @@ bool HitscanRay::draw(vector<GameObject*>& gameobjs) {
 //		cout << "goteem\n";
 
 		float xchange = 20 * cos(angle);
-		float ychange = 20 * sin(angle);
+		float ychange = -20 * sin(angle);
 
 //		cout << xchange << endl;
 //		cout << ychange << endl;
@@ -32,7 +32,7 @@ bool HitscanRay::draw(vector<GameObject*>& gameobjs) {
 			desty += ychange;
 			Circle* c = toHit->collides(destx, desty);
 			if (c != nullptr) {
-				damageinfo.setAngle(angle, atan((originy - c->y) / (originx - c->x)), toHit->getAngle());
+				damageinfo.setAngle(angle, atan((originy - c->y) / (originx - c->x)), toHit->previous);
 				toHit->damage(damageinfo, owner);
 				break;
 			}

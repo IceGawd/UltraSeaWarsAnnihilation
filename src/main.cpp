@@ -20,9 +20,7 @@ struct GamePad {
 };
 
 inline void printInputs(Inputs& input) {
-	cout << "RIGHT: " << input.moveright << endl;
-	cout << "LEFT: " << input.moveleft << endl;
-	cout << "DIRECTION: " << input.direction << endl;
+	// LMAO ALL OF ITS SHIT DOESSN"T EXIST
 }
 
 void applyFrame(vector<GameObject*>& gameobjs, Stage* stage, Inputs& player1, Inputs& player2) {
@@ -49,49 +47,30 @@ void applyFrame(vector<GameObject*>& gameobjs, Stage* stage, Inputs& player1, In
 
 void localInputs(Player* player, const GamePad& controllerInput, const GamePad& lastControllerInput) {
 	Inputs thisFrame;
-	int xaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTX];
-	int yaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTY];
-	int xprev = lastControllerInput.axis[SDL_CONTROLLER_AXIS_LEFTX];
-	int yprev = lastControllerInput.axis[SDL_CONTROLLER_AXIS_LEFTY];
+	float xaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTX] / 32768.0;
+	float yaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTY] / 32768.0;
 //	cout << xaxis << endl;
 
-	if (xaxis > 10000) {
-		if (yaxis > 10000) {
-			thisFrame.direction = DOWN_RIGHT;
-		}
-		else if (yaxis < -10000) {
-			thisFrame.direction = UP_RIGHT;
+	if (xaxis == 0) {
+		if (yaxis >= 0) {
+			// cout << "up" << endl;
+			thisFrame.direction.angle = M_PI / -2.0;
 		}
 		else {
-			thisFrame.direction = RIGHT;
-		}
-
-		if (xaxis > 20000) {
-			thisFrame.moveright = true;
+			// cout << "down" << endl;
+			thisFrame.direction.angle = M_PI / 2.0;			
 		}
 	}
-	else if (xaxis < -10000) {
-		if (yaxis > 10000) {
-			thisFrame.direction = DOWN_LEFT;
-		}
-		else if (yaxis < -10000) {
-			thisFrame.direction = UP_LEFT;
-		}
-		else {
-			thisFrame.direction = LEFT;
-		}
-		if (xaxis < -20000) {
-			thisFrame.moveleft = true;
-		}
+	else if (xaxis > 0) {
+		thisFrame.direction.angle = -atan(yaxis / xaxis);
 	}
 	else {
-		if (yaxis > 10000) {
-			thisFrame.direction = DOWN;
-		}
-		else if (yaxis < -10000) {
-			thisFrame.direction = UP;
-		}
+		thisFrame.direction.angle = M_PI - atan(yaxis / xaxis);
 	}
+
+
+	thisFrame.direction.magnitude = sqrt(xaxis * xaxis + yaxis * yaxis);
+
 	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_A] && !lastControllerInput.buttons[SDL_CONTROLLER_BUTTON_A]) {
 		thisFrame.quick = true;
 	}
@@ -148,9 +127,9 @@ void runGame() {
 	unordered_map<SDL_Keycode, SDL_GameControllerButton> keymap = {
 		{SDLK_LSHIFT, SDL_CONTROLLER_BUTTON_LEFTSTICK}, 
 		{SDLK_SPACE, SDL_CONTROLLER_BUTTON_START}, 
-		{SDLK_j, SDL_CONTROLLER_BUTTON_B}, 
-		{SDLK_h, SDL_CONTROLLER_BUTTON_A}, 
-		{SDLK_k, SDL_CONTROLLER_BUTTON_X}, 
+		{SDLK_g, SDL_CONTROLLER_BUTTON_B}, 
+		{SDLK_f, SDL_CONTROLLER_BUTTON_A}, 
+		{SDLK_h, SDL_CONTROLLER_BUTTON_X}, 
 	};
 	if (SDL_Init(SDL_INIT_VIDEO) > 0) {
 		cout << "SDL Video Failure: " << SDL_GetError() << "\n";
