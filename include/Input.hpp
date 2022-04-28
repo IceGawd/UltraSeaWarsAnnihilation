@@ -17,8 +17,9 @@ struct Inputs {
 	bool quick = false;
 	bool charge = false;
 	bool jump = false;
-
-	bool jumpPressed = false;
+	bool shield = false;
+	bool tech = false;
+	// int frame; // For testing later
 };
 
 enum Method {

@@ -110,26 +110,30 @@ Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER,
 	}
 }
 
-void Vanshlicer::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
-//	cout << "heriam\n";
-	if (charge) {
-		lag = ForwardQuick;
-//		cout << "ah\n";
-		this->charge = 0;
-	}
-	else {
-		if (onGround) {
-			if (wasDown(d)) {
-				lag = 8;
-				type = ATTACK;
-				inUse = DownQuick;
-			}
-		}
-		else {
+void Vanshlicer::startForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
 
-		}
-	}
-	Player::attack(gameobjs, charge, d);
+}
+
+void Vanshlicer::startBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Vanshlicer::releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Vanshlicer::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Vanshlicer::forwardQuick(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Vanshlicer::downQuick(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 8;
+	type = ATTACK;
+	inUse = DownQuick;
 }
 
 GameObject* Vanshlicer::createObject() {

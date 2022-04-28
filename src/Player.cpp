@@ -141,7 +141,7 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 				}
 			}
 		}
-		if (input.jumpPressed) {
+		if (input.jump && !previousJump) {
 			if (onGround) {
 				lag = jumpSquat;
 				type = JUMP;
@@ -154,7 +154,7 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			}
 		}
 //		cout << "Lag: " << lag << endl;
-		if (input.quick) {
+		if (input.quick && !previousQuick) {
 			attack(gameobjs, false, input.direction);
 		}
 		if (input.charge) {
@@ -310,7 +310,9 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		stale.clear();
 		// cout << 0 / 0 << endl;
 	}
-
+	
+	previousJump = input.jump;
+	previousQuick = input.quick;
 	setRect();
 }
 
@@ -405,9 +407,81 @@ void Player::damage(DamageInfo& damageinfo, Player* attacker) {
 
 void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 //	cout << "bro...\n";
+	if (charge) {
+		if (this->charge == 0) {
+			// START CHARGING
+			inUse = ForwardQuick; // Temp no
+			this->charge = 1;
+			bool right = wasRight(d);
+			bool left = wasLeft(d);
+			if (right || left) {
+				if ((right && facingRight) || (left && !facingRight)) {
+					inUse = ForwardCharge;
+					startForwardCharge(gameobjs, d);
+				}
+				else {
+					inUse = BackCharge;
+					startBackCharge(gameobjs, d);
+				}
+			}
+		}
+		else {
+			// RELEASE CHARGE
+			type = NONE;
+			if (inUse == ForwardCharge) {
+				releaseForwardCharge(gameobjs, d);
+			}
+			if (inUse == BackCharge) {
+				releaseBackCharge(gameobjs, d);
+			}
+
+			this->charge = 0;
+		}
+	}
+	else {
+		if (onGround) {
+			// QUICK
+			if ((wasRight(d) && facingRight) || (wasLeft(d) && !facingRight)) {
+				inUse = ForwardQuick;
+				forwardQuick(gameobjs, d);
+			}
+			if (wasDown(d)) {
+				inUse = DownQuick;				
+				downQuick(gameobjs, d);
+			}
+		}
+		else {
+			// AERIALS
+		}
+	}
+
 	attackNumber++;
 }
 
 GameObject* Player::createObject() {
 	return new Player();
+}
+
+void Player::startForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::startBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::forwardQuick(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::downQuick(vector<GameObject*>& gameobjs, Direction d) {
+
 }

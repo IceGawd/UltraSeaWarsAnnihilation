@@ -88,101 +88,85 @@ Avigunner::Avigunner(RenderWindow& window, Controllers p) : Player(AVIGUNNER, p)
 	}
 }
 
-void Avigunner::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
-	if (charge) {
-		if (this->charge == 0) {
-			// START CHARGING
-			inUse = ForwardQuick; // Temp no
-			this->charge = 1;
-			if (wasRight(d) || wasLeft(d)) {
-				if ((wasRight(d) && facingRight) || (wasLeft(d) && !facingRight)) {
-					lag = 3;
-					type = ATTACK;
-					inUse = ForwardCharge;
-				}
-				else {
-					lag = 3;
-					type = ATTACK;
-					inUse = BackCharge;
-				}
-			}
-		}
-		else {
-			// RELEASE CHARGE
-			type = NONE;
-			cout << this->charge << endl;
-			if (inUse == ForwardCharge) {
-				lag = 5;
-				type = ATTACK;
+void Avigunner::startForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 3;
+	type = ATTACK;
+}
 
-				float angle = d.angle;
+void Avigunner::startBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 3;
+	type = ATTACK;
+}
 
-				if (facingRight) { 
-					if (!wasRight(d)) {
-						angle = 0;
-					}
-				}
-				else {
-					if (!wasLeft(d)) {
-						angle = M_PI;
-					}
-				}
-				float maxanglemod = (M_PI * this->charge) / (2.0 * CHARGEMAX);
+void Avigunner::releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 5;
+	type = ATTACK;
 
-				float xtemp = x;
-				if (facingRight) {xtemp += 170;} else {}
-				float shotsFired = this->charge / 5;
+	float angle = d.angle;
 
-				for (int z = 0; z < shotsFired; z++) {
-					// cout << "arg: " << (angle + maxanglemod * (0.5 - (z / shotsFired))) << endl;
-					gameobjs.push_back(new HitscanRay(xtemp, y + 150, (angle + maxanglemod * (0.5 - (z / shotsFired))), playerNum, DamageInfo(1, 30, 0.6, 0)));
-				}
-			}
-			if (inUse == BackCharge) {
-				float angle = d.angle;
-				float maxanglemod = (M_PI * this->charge) / (1.5 * CHARGEMAX);
-
-				float xtemp = x;
-				if (facingRight) {} else {xtemp += 170;}
-				const float spores = this->charge / 10;
-				float velocity = (CHARGEMAX + this->charge) / 6;
-
-				for (int z = 14; z > 14 - spores; z--) {
-					DamageInfo di = DamageInfo(5, 120, 0.5, 3);
-//					cout << "mod: " << this->charge % z << endl;
-//					cout << "div: " << z / 2.0 << endl;
-//					cout << "tot: " << ((z / 2.0 - (this->charge % z)) / z) << endl;
-					float mod = ((z / 2.0 - (this->charge % z)) / z);
-					di.angle = angle + maxanglemod * mod;
-					velocity *= 1.2 + 0.1 * (this->charge / CHARGEMAX);
-//					cout << "arg: " << di.angle << endl;
-					gameobjs.push_back(new Spore(xtemp, y + 150, velocity * cos(di.angle), velocity * sin(di.angle), 300, 10, playerNum, di, "Spore"));
-				}
-			}
-
-			this->charge = 0;
+	if (facingRight) { 
+		if (!wasRight(d)) {
+			angle = 0;
 		}
 	}
 	else {
-		if (onGround) {
-			// QUICK
-			if ((wasRight(d) && facingRight) || (wasLeft(d) && !facingRight)) {
-				lag = 8;
-				type = ATTACK;
-				inUse = ForwardQuick;
-			}
-			if (wasDown(d)) {
-				lag = 8;
-				type = ATTACK;
-				inUse = DownQuick;				
-			}
-		}
-		else {
-			// AERIALS
-
+		if (!wasLeft(d)) {
+			angle = M_PI;
 		}
 	}
-	Player::attack(gameobjs, charge, d);
+	float maxanglemod = (M_PI * this->charge) / (2.0 * CHARGEMAX);
+
+	float xtemp = x;
+	if (facingRight) {xtemp += 170;} else {}
+	float shotsFired = this->charge / 5;
+
+	for (int z = 0; z < shotsFired; z++) {
+		// cout << "arg: " << (angle + maxanglemod * (0.5 - (z / shotsFired))) << endl;
+		gameobjs.push_back(new HitscanRay(xtemp, y + 150, (angle + maxanglemod * (0.5 - (z / shotsFired))), playerNum, DamageInfo(1, 30, 0.6, 0)));
+	}
+}
+
+void Avigunner::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+	float angle = d.angle;
+
+	if (facingRight) { 
+		if (!wasLeft(d)) {
+			angle = M_PI;
+		}
+	}
+	else {
+		if (!wasRight(d)) {
+			angle = 0;
+		}
+	}
+	float maxanglemod = (M_PI * this->charge) / (1.5 * CHARGEMAX);
+
+	float xtemp = x;
+	if (facingRight) {} else {xtemp += 170;}
+	const float spores = this->charge / 10;
+	float velocity = (CHARGEMAX + this->charge) / 6;
+
+	for (int z = 14; z > 14 - spores; z--) {
+		DamageInfo di = DamageInfo(5, 120, 0.5, 3);
+//					cout << "mod: " << this->charge % z << endl;
+//					cout << "div: " << z / 2.0 << endl;
+//					cout << "tot: " << ((z / 2.0 - (this->charge % z)) / z) << endl;
+		float mod = ((z / 2.0 - (this->charge % z)) / z);
+		di.angle = angle + maxanglemod * mod;
+		velocity *= 1.2 + 0.1 * (this->charge / CHARGEMAX);
+//					cout << "arg: " << di.angle << endl;
+		gameobjs.push_back(new Spore(xtemp, y + 150, velocity * cos(di.angle), -velocity * sin(di.angle), 300, 10, playerNum, di, "Spore"));
+	}
+}
+
+void Avigunner::forwardQuick(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 8;
+	type = ATTACK;
+}
+
+void Avigunner::downQuick(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 8;
+	type = ATTACK;
 }
 
 void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {

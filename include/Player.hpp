@@ -25,6 +25,8 @@ public:
 	list<Inputs> inputQueue = {{}};
 	list<Inputs> rollback = {};
 	int walkspeed;
+	int dashspeed;
+	int dashframes;
 	int jumpspeed;
 	int fallspeed;
 	int jumpSquat;
@@ -61,9 +63,18 @@ public:
 	int lastAttackNumHitBy = -1;
 
 	Direction previous;
+	bool previousJump;
+	bool previousQuick;
 	static const int INVULNFLASHTIME = 1;
 	static const int CHARGEMAX = 120;
 	static constexpr float SQRT2 = (float) sqrt(2);
+
+	virtual void startForwardCharge(vector<GameObject*>& gameobjs, Direction d);
+	virtual void startBackCharge(vector<GameObject*>& gameobjs, Direction d);
+	virtual void releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d);
+	virtual void releaseBackCharge(vector<GameObject*>& gameobjs, Direction d);
+	virtual void forwardQuick(vector<GameObject*>& gameobjs, Direction d);
+	virtual void downQuick(vector<GameObject*>& gameobjs, Direction d);
 
 	Player();
 	Player(Character c, Controllers p);
@@ -78,18 +89,18 @@ public:
 	virtual GameObject* createObject();
 
 	inline bool wasDown(Direction& d) {
-		return d.magnitude > 0.1 && ((d.angle > 5 * M_PI / 4) || (d.angle < -M_PI / 4));
+		return d.magnitude > 0.1 && ((d.angle > 11 * M_PI / 8) || (d.angle < -3 * M_PI / 8));
 	}
 
 	inline bool wasUp(Direction& d) {
-		return d.magnitude > 0.1 && ((3 * M_PI / 4 > d.angle) && (d.angle > M_PI / 4));
+		return d.magnitude > 0.1 && ((5 * M_PI / 8 > d.angle) && (d.angle > 3 * M_PI / 8));
 	}
 
 	inline bool wasRight(Direction& d) {
-		return d.magnitude > 0.1 && ((M_PI / 4 >= d.angle) && (d.angle >= -M_PI / 4));
+		return d.magnitude > 0.1 && ((3 * M_PI / 8 >= d.angle) && (d.angle >= -3 * M_PI / 8));
 	}
 
 	inline bool wasLeft(Direction& d) {
-		return d.magnitude > 0.1 && ((5 * M_PI / 4 >= d.angle) && (d.angle >= 3 * M_PI / 4));
+		return d.magnitude > 0.1 && ((11 * M_PI / 8 >= d.angle) && (d.angle >= 5 * M_PI / 8));
 	}
 };

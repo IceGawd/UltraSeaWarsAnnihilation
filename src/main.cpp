@@ -45,7 +45,7 @@ void applyFrame(vector<GameObject*>& gameobjs, Stage* stage, Inputs& player1, In
 //	cout << "endl\n";
 }
 
-void localInputs(Player* player, const GamePad& controllerInput, const GamePad& lastControllerInput) {
+void localInputs(Player* player, const GamePad& controllerInput) {
 	Inputs thisFrame;
 	float xaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTX] / 32768.0;
 	float yaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTY] / 32768.0;
@@ -71,7 +71,7 @@ void localInputs(Player* player, const GamePad& controllerInput, const GamePad& 
 
 	thisFrame.direction.magnitude = sqrt(xaxis * xaxis + yaxis * yaxis);
 
-	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_A] && !lastControllerInput.buttons[SDL_CONTROLLER_BUTTON_A]) {
+	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_A]) {
 		thisFrame.quick = true;
 	}
 	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_B]) {
@@ -79,24 +79,27 @@ void localInputs(Player* player, const GamePad& controllerInput, const GamePad& 
 	}
 	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_X] || controllerInput.buttons[SDL_CONTROLLER_BUTTON_Y]) {
 		thisFrame.jump = true;
-		if (!lastControllerInput.buttons[SDL_CONTROLLER_BUTTON_X] && !lastControllerInput.buttons[SDL_CONTROLLER_BUTTON_Y]) {
-			thisFrame.jumpPressed = true;
-		}
+	}
+	if (controllerInput.axis[SDL_CONTROLLER_AXIS_TRIGGERLEFT] > 15000 || controllerInput.axis[SDL_CONTROLLER_AXIS_TRIGGERRIGHT] > 15000) {
+		thisFrame.shield = true;
+	}
+	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] || controllerInput.buttons[SDL_CONTROLLER_BUTTON_RIGHTSHOULDER]) {
+		thisFrame.tech = true;
 	}
 
 	player->inputQueue.push_back(thisFrame);
 }
 
-void getInputs(Player* player, const vector<GamePad>& controllerInputs, const vector<GamePad>& lastControllerInputs) {
+void getInputs(Player* player, const vector<GamePad>& controllerInputs) {
 	switch (player->inputs.method) {
 		case ONLINE:
 			// CHECK THREAD FOR INFO
 			break;
 		case KEYBOARD:
-			localInputs(player, controllerInputs.back(), lastControllerInputs.back());
+			localInputs(player, controllerInputs.back());
 			break;
 		case CONTROLLER:
-			localInputs(player, controllerInputs[player->inputs.controllerNum], lastControllerInputs[player->inputs.controllerNum]);
+			localInputs(player, controllerInputs[player->inputs.controllerNum]);
 			break;
 	}
 }
@@ -120,16 +123,16 @@ void deepCopy(vector<GameObject*>& vecFrom, vector<GameObject*>& vecTo) {
 void runGame() {
 	vector<SDL_GameController*> connectedControllers;
 	vector<GamePad> controllerInputs;
-	vector<GamePad> lastControllerInputs;
 	int numGamepads;
 	const int FPS = 60;
 
 	unordered_map<SDL_Keycode, SDL_GameControllerButton> keymap = {
 		{SDLK_LSHIFT, SDL_CONTROLLER_BUTTON_LEFTSTICK}, 
-		{SDLK_SPACE, SDL_CONTROLLER_BUTTON_START}, 
-		{SDLK_g, SDL_CONTROLLER_BUTTON_B}, 
-		{SDLK_f, SDL_CONTROLLER_BUTTON_A}, 
-		{SDLK_h, SDL_CONTROLLER_BUTTON_X}, 
+		{SDLK_ESCAPE, SDL_CONTROLLER_BUTTON_START}, 
+		{SDLK_SPACE, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER}, 
+		{SDLK_w, SDL_CONTROLLER_BUTTON_X}, 
+		{SDLK_g, SDL_CONTROLLER_BUTTON_A}, 
+		{SDLK_h, SDL_CONTROLLER_BUTTON_B}, 
 	};
 	if (SDL_Init(SDL_INIT_VIDEO) > 0) {
 		cout << "SDL Video Failure: " << SDL_GetError() << "\n";
@@ -171,17 +174,14 @@ void runGame() {
 
 	// Vectors are empty to begin with, this sets their size
 	controllerInputs.resize(numGamepads + 1);
-	lastControllerInputs.resize(numGamepads + 1);
 
 	// Set the status of the controllers to "nothing is happening"
 	for (int i = 0; i < numGamepads; i++) {
 		for (int a = 0; a < SDL_CONTROLLER_AXIS_MAX; a++) {
 			controllerInputs[i].axis[a] = 0;
-			lastControllerInputs[i].axis[a] = 0;
 		}
 		for (int b = 0; b < SDL_CONTROLLER_BUTTON_MAX; b++) {
 			controllerInputs[i].buttons[b] = false;
-			lastControllerInputs[i].buttons[b] = false;
 		}
 	}
 
@@ -207,15 +207,6 @@ void runGame() {
 
 		window.clear();
 		window.render(background, true);
-
-		for (int i = 0; i <= numGamepads; i++) {
-			for (int a = 0; a < SDL_CONTROLLER_AXIS_MAX; a++) {
-				lastControllerInputs[i].axis[a] = controllerInputs[i].axis[a];
-			}
-			for (int b = 0; b < SDL_CONTROLLER_BUTTON_MAX; b++) {
-				lastControllerInputs[i].buttons[b] = controllerInputs[i].buttons[b];
-			}
-		}
 
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
@@ -247,11 +238,11 @@ void runGame() {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTY] = 25000;
 					}
 					if (kc == SDLK_a) {
-//						cout << "a\n"; 
+						// cout << "a\n"; 
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = -25000;
 					}
 					if (kc == SDLK_d) {
-//						cout << "d\n"; 
+						// cout << "d\n"; 
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTX] = 25000;
 					}
 					break;
@@ -366,18 +357,20 @@ void runGame() {
 			}
 
 
-			getInputs(player1, controllerInputs, lastControllerInputs);
-			getInputs(player2, controllerInputs, lastControllerInputs);
+			getInputs(player1, controllerInputs);
+			getInputs(player2, controllerInputs);
 
 			// ROLLBACK AND INPUT USEAGE CODE
 			while (player1Queue.size() > 1 && player2Queue.size() > 1 && player1Rollback.size() == 0 && player2Rollback.size() == 0) {
 				player1Queue.pop_front(); // Pop first because first input was the last input used
 				player2Queue.pop_front();
 				applyFrame(gameobjs, stage, player1Queue.front(), player2Queue.front());
-//				applyFrame(rollbackpoint, stage, player1Queue.front(), player2Queue.front());
+				// applyFrame(rollbackpoint, stage, player1Queue.front(), player2Queue.front()); // If there is no rollback, then these are perfect
 			}
 			if (player1Queue.size() > 1 || player2Queue.size() > 1) {
 				cout << "ROLLBACK BS ALERT" << endl;
+
+				// deepCopy(gameobjs, rollbackpoint); // I THINK??? (No because gameobjs could be incorrect)
 
 				while (player1Queue.size() > 1) {
 					player1Queue.pop_front();
