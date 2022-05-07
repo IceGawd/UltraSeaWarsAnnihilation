@@ -101,40 +101,39 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		attack(gameobjs, true, input.direction);
 	}
 
-	if (lag <= 0) {
+	cout << lag << endl;
+	if (lag <= 0 || type == DASH) {
 		if (onGround && wasDown(input.direction)) {
 			xvel *= slowDown;
 		}
 		// ACTIVE
 		if (input.direction.magnitude > 0.75) {
-			// cout << "high: " << M_PI / 4 << endl;
-			// cout << "val: " << input.direction.angle << endl;
-			// cout << "low: " << M_PI / -4 << endl;
+			bool rest = abs(xvel) < 0.1;
 			if (wasRight(input.direction)) {
-				if (!facingRight && onGround) {
-					if (wasDown(previous) || !wasDown(input.direction)) {
-	//					cout << "Failure: " << previous << endl;
-						lag = turnAround;
-						type = TURNAROUND;
-					}
+				if (onGround && ((!facingRight && (lag > 0 || rest)) || (facingRight && lag == 0 && !wasRight(previous) && rest))) {
+					lag = dashframes;
+					type = DASH;
+					xvel += dashspeed;
+					facingRight = !facingRight;
+				}
+				else if (onGround && !facingRight) {
+					lag = turnAround;
+					type = TURNAROUND;
 				}
 				else {
 					xvel += walkspeed;
 				}
 			}
-			else if (wasLeft(input.direction)) {
-				if (facingRight && onGround) {
-					if (wasDown(previous) || !wasDown(input.direction)) {
-						// cout << "Failure: " << previous << endl;
-						lag = turnAround;
-						type = TURNAROUND;
-					}
-					else {
-						// cout << "Success: " << previous << endl;
-						cout << "TECH: TCL\n";
-						facingRight = !facingRight;
-						// TECH: Turn Cancel
-					}
+			if (wasLeft(input.direction)) {
+				if (onGround && ((facingRight && (lag > 0 || rest)) || (!facingRight && lag == 0 && !wasRight(previous) && rest))) {
+					lag = dashframes;
+					type = DASH;
+					xvel -= dashspeed;
+					facingRight = !facingRight;
+				}
+				else if (onGround && facingRight) {
+					lag = turnAround;
+					type = TURNAROUND;
 				}
 				else {
 					xvel -= walkspeed;
@@ -161,9 +160,18 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			lag = 1;
 			type = CHARGE;
 		}
+
+		if (lag > 0) {
+			lag--;
+		}
 	}
 	else {
 		lag--;
+
+		if (type == TURNAROUND) {
+			xvel /= 2;
+		}
+
 		if (lag == 0) {
 			switch (type) {
 				case CHARGE:

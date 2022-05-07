@@ -65,6 +65,7 @@ public:
 	Direction previous;
 	bool previousJump;
 	bool previousQuick;
+	static constexpr float minMagnitude = 0.1f;
 	static const int INVULNFLASHTIME = 1;
 	static const int CHARGEMAX = 120;
 	static constexpr float SQRT2 = (float) sqrt(2);
@@ -89,18 +90,18 @@ public:
 	virtual GameObject* createObject();
 
 	inline bool wasDown(Direction& d) {
-		return d.magnitude > 0.1 && ((d.angle > 11 * M_PI / 8) || (d.angle < -3 * M_PI / 8));
+		return d.magnitude > minMagnitude && ((d.angle > 11 * M_PI / 8) || (d.angle < -3 * M_PI / 8));
 	}
 
 	inline bool wasUp(Direction& d) {
-		return d.magnitude > 0.1 && ((5 * M_PI / 8 > d.angle) && (d.angle > 3 * M_PI / 8));
+		return d.magnitude > minMagnitude && ((5 * M_PI / 8 > d.angle) && (d.angle > 3 * M_PI / 8));
 	}
 
 	inline bool wasRight(Direction& d) {
-		return d.magnitude > 0.1 && ((3 * M_PI / 8 >= d.angle) && (d.angle >= -3 * M_PI / 8));
+		return d.magnitude > minMagnitude && ((3 * M_PI / 8 >= d.angle) && (d.angle >= -3 * M_PI / 8));
 	}
 
 	inline bool wasLeft(Direction& d) {
-		return d.magnitude > 0.1 && ((11 * M_PI / 8 >= d.angle) && (d.angle >= 5 * M_PI / 8));
+		return d.magnitude > minMagnitude && ((11 * M_PI / 8 >= d.angle) && (d.angle >= 5 * M_PI / 8));
 	}
 };
