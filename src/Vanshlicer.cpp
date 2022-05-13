@@ -138,6 +138,10 @@ void Vanshlicer::downQuick(vector<GameObject*>& gameobjs, Direction d) {
 	inUse = DownQuick;
 }
 
+void Vanshlicer::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
+	
+}
+
 GameObject* Vanshlicer::createObject() {
 	return new Vanshlicer();
 }

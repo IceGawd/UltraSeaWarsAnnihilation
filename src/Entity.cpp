@@ -9,7 +9,6 @@ Entity::~Entity() {
 	SDL_DestroyTexture(texture);
 }
 
-
 Entity::Entity() : x(0), y(0) {
 
 }
@@ -22,6 +21,16 @@ Entity::Entity(float px, float py, SDL_Texture* ptexture) : x(px), y(py), textur
 	fullPicSize();
 	setRect();
 }
+
+// COPY CONSTRUCTOR
+/*
+Entity::Entity(const Entity& e) {
+	cout << "COPY" << endl;
+
+	texture = new SDL_Texture();
+	*texture = *(e.texture);
+}
+*/
 
 void Entity::fullPicSize() {
 	SDL_Point p = getsize();

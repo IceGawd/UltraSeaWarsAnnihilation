@@ -76,6 +76,7 @@ public:
 	virtual void releaseBackCharge(vector<GameObject*>& gameobjs, Direction d);
 	virtual void forwardQuick(vector<GameObject*>& gameobjs, Direction d);
 	virtual void downQuick(vector<GameObject*>& gameobjs, Direction d);
+	virtual void forwardAerial(vector<GameObject*>& gameobjs, Direction d);
 
 	Player();
 	Player(Character c, Controllers p);
@@ -103,5 +104,9 @@ public:
 
 	inline bool wasLeft(Direction& d) {
 		return d.magnitude > minMagnitude && ((11 * M_PI / 8 >= d.angle) && (d.angle >= 5 * M_PI / 8));
+	}
+
+	inline bool wasNeutral(Direction& d) {
+		return d.magnitude < minMagnitude;
 	}
 };

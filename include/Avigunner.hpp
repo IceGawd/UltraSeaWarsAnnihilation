@@ -6,6 +6,7 @@
 #include "Moves.hpp"
 #include "HitscanRay.hpp"
 #include "Spore.hpp"
+#include "HookShot.hpp"
 
 class Avigunner : public Player {
 public:
@@ -18,6 +19,7 @@ public:
 	void releaseBackCharge(vector<GameObject*>& gameobjs, Direction d);
 	void forwardQuick(vector<GameObject*>& gameobjs, Direction d);
 	void downQuick(vector<GameObject*>& gameobjs, Direction d);
+	void forwardAerial(vector<GameObject*>& gameobjs, Direction d);
 
 	void applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input);
 	GameObject* createObject();

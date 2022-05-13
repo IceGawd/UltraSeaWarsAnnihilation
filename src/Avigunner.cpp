@@ -171,6 +171,13 @@ void Avigunner::downQuick(vector<GameObject*>& gameobjs, Direction d) {
 	type = ATTACK;
 }
 
+void Avigunner::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
+	cout << "hookshot" << endl;
+	float xtemp = x;
+	if (facingRight) {xtemp += 170;} else {}
+	gameobjs.push_back(new HookShot(xtemp, y + 150, 100 * d.magnitude * cos(d.angle), -100 * d.magnitude * sin(d.angle), playerNum));
+}
+
 void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	if (type == ATTACK) {
 		if (inUse == ForwardQuick && lag == 5) {

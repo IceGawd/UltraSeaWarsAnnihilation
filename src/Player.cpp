@@ -42,6 +42,7 @@ void Player::zeroInitializeHitboxes() {
 
 void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	onGround = false;
+	// cout << texture << endl;
 	// cout << "EL AM AY OW" << endl;
 	// cout << "x: " << x << " y: " << y << " xvel: " << xvel << " yvel: " << yvel << endl;
 	for (int tempnum = hitboxes.size() - 1; tempnum >= 0; tempnum--) {
@@ -62,7 +63,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			y -= 5 * sin(angle);
 			c.x += 5 * cos(angle);
 			c.y -= 5 * sin(angle);
-
 		}
 		if (onGround) {
 			if (yvel > 0) {
@@ -101,8 +101,12 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		attack(gameobjs, true, input.direction);
 	}
 
-	cout << lag << endl;
+	// cout << lag << endl;
 	if (lag <= 0 || type == DASH) {
+		if (lag > 0) {
+			lag--;
+		}
+
 		if (onGround && wasDown(input.direction)) {
 			xvel *= slowDown;
 		}
@@ -110,13 +114,13 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		if (input.direction.magnitude > 0.75) {
 			bool rest = abs(xvel) < 0.1;
 			if (wasRight(input.direction)) {
-				if (onGround && ((!facingRight && (lag > 0 || rest)) || (facingRight && lag == 0 && !wasRight(previous) && rest))) {
+				if (onGround && ((!facingRight && (lag > 0 || rest)) || (facingRight && lag == 0 && wasNeutral(previous) && rest))) {
 					lag = dashframes;
 					type = DASH;
 					xvel += dashspeed;
 					facingRight = !facingRight;
 				}
-				else if (onGround && !facingRight) {
+				else if (onGround && !facingRight && lag == 0) {
 					lag = turnAround;
 					type = TURNAROUND;
 				}
@@ -125,13 +129,13 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 				}
 			}
 			if (wasLeft(input.direction)) {
-				if (onGround && ((facingRight && (lag > 0 || rest)) || (!facingRight && lag == 0 && !wasRight(previous) && rest))) {
+				if (onGround && ((facingRight && (lag > 0 || rest)) || (!facingRight && lag == 0 && wasNeutral(previous) && rest))) {
 					lag = dashframes;
 					type = DASH;
 					xvel -= dashspeed;
 					facingRight = !facingRight;
 				}
-				else if (onGround && facingRight) {
+				else if (onGround && facingRight && lag == 0) {
 					lag = turnAround;
 					type = TURNAROUND;
 				}
@@ -159,10 +163,6 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 		if (input.charge) {
 			lag = 1;
 			type = CHARGE;
-		}
-
-		if (lag > 0) {
-			lag--;
 		}
 	}
 	else {
@@ -412,7 +412,6 @@ void Player::damage(DamageInfo& damageinfo, Player* attacker) {
 	}
 }
 
-
 void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 //	cout << "bro...\n";
 	if (charge) {
@@ -460,6 +459,10 @@ void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 		}
 		else {
 			// AERIALS
+			if ((wasRight(d) && facingRight) || (wasLeft(d) && !facingRight)) {
+				inUse = ForwardAerial;
+				forwardAerial(gameobjs, d);
+			}
 		}
 	}
 
@@ -491,5 +494,9 @@ void Player::forwardQuick(vector<GameObject*>& gameobjs, Direction d) {
 }
 
 void Player::downQuick(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 
 }

@@ -16,6 +16,7 @@ public:
 	void releaseBackCharge(vector<GameObject*>& gameobjs, Direction d);
 	void forwardQuick(vector<GameObject*>& gameobjs, Direction d);
 	void downQuick(vector<GameObject*>& gameobjs, Direction d);
+	void forwardAerial(vector<GameObject*>& gameobjs, Direction d);
 
 	GameObject* createObject();
 };

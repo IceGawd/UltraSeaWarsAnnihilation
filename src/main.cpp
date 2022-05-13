@@ -33,16 +33,16 @@ void applyFrame(vector<GameObject*>& gameobjs, Stage* stage, Inputs& player1, In
 	static_cast<Player*>(gameobjs.at(0))->applyFrame(gameobjs, stage, player1);
 	static_cast<Player*>(gameobjs.at(1))->applyFrame(gameobjs, stage, player2);
 	for (int x = 0; x < gameobjs.size(); x++) {
-//		cout << "X: " << x << endl;
-		bool dead = gameobjs.at(x)->draw(gameobjs);
+		// cout << "X: " << x << endl;
+		bool dead = gameobjs.at(x)->draw(gameobjs); // Add stage (nightmare)
 		if (dead) {
-//			cout << "death\n";
+			// cout << "death\n";
 			delete gameobjs.at(x);
 			gameobjs.erase(gameobjs.begin() + x);
 			x--;
 		}
 	}
-//	cout << "endl\n";
+	// cout << "endl\n";
 }
 
 void localInputs(Player* player, const GamePad& controllerInput) {
@@ -105,17 +105,22 @@ void getInputs(Player* player, const vector<GamePad>& controllerInputs) {
 }
 
 // COULD LEAD TO POTENTIAL BULLSHIT
-// CURRENTLY A MEM LEAK
-// ALSO CURRENTLY BROKEN RIP
+// CURRENTLY COPIES PLAYERS LOSES TEXTURE
+// IF ENTITY.CPP DELETE TEXTURE REMOVED, IT CAUSES A MEM LEAK
 void deepCopy(vector<GameObject*>& vecFrom, vector<GameObject*>& vecTo) {
 	while (!vecTo.empty()) {
+		// cout << "Deleted: " << vecTo.back()->texture << endl;
 		delete vecTo.back();
 		vecTo.pop_back();
 	}
 
 	for (GameObject* ep : vecFrom) {
 		Player* temp = new Player();
+		// cout << "Temp 1: " << temp->texture << endl;
+		// cout << "ep1: " << ep->texture << endl;
 		*temp = *(Player*) ep;
+		// cout << "Temp 2: " << temp->texture << endl;
+		// cout << "ep2: " << ep->texture << endl;
 		vecTo.push_back(temp);
 	}
 }
@@ -221,7 +226,7 @@ void runGame() {
 					if (keymap.find(kc) != keymap.end()) {
 						controllerInputs[numGamepads].buttons[keymap[kc]] = true;
 					}
-					/*
+					///*
 					if (kc == SDLK_t) {
 						cout << "Point back roll" << endl;
 						deepCopy(gameobjs, rollbackpoint);
@@ -230,7 +235,7 @@ void runGame() {
 						cout << "RBP" << endl;
 						deepCopy(rollbackpoint, gameobjs);
 					}
-					*/
+					//*/
 					if (kc == SDLK_w) {
 						controllerInputs[numGamepads].axis[SDL_CONTROLLER_AXIS_LEFTY] = -25000;
 					}
