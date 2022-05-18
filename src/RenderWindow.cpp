@@ -71,7 +71,7 @@ void RenderWindow::render(Entity* entity, bool stationary) {
 	//	cout << "x2: " << entity->getsize().x << endl;
 	//	cout << "y2: " << entity->getsize().y << endl;
 
-		SDL_RenderCopy(renderer, entity->texture, &(entity->currentFrame), &dest);
+		SDL_RenderCopy(renderer, entity->texture.get(), &(entity->currentFrame), &dest);
 	}
 
 	entity->customDraw(this);

@@ -105,8 +105,7 @@ void getInputs(Player* player, const vector<GamePad>& controllerInputs) {
 }
 
 // COULD LEAD TO POTENTIAL BULLSHIT
-// CURRENTLY COPIES PLAYERS LOSES TEXTURE
-// IF ENTITY.CPP DELETE TEXTURE REMOVED, IT CAUSES A MEM LEAK
+// UNKNOWN MEM LEAK
 void deepCopy(vector<GameObject*>& vecFrom, vector<GameObject*>& vecTo) {
 	while (!vecTo.empty()) {
 		// cout << "Deleted: " << vecTo.back()->texture << endl;
@@ -115,13 +114,7 @@ void deepCopy(vector<GameObject*>& vecFrom, vector<GameObject*>& vecTo) {
 	}
 
 	for (GameObject* ep : vecFrom) {
-		Player* temp = new Player();
-		// cout << "Temp 1: " << temp->texture << endl;
-		// cout << "ep1: " << ep->texture << endl;
-		*temp = *(Player*) ep;
-		// cout << "Temp 2: " << temp->texture << endl;
-		// cout << "ep2: " << ep->texture << endl;
-		vecTo.push_back(temp);
+		vecTo.push_back(ep->createObject());
 	}
 }
 

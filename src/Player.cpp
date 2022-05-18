@@ -469,10 +469,6 @@ void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 	attackNumber++;
 }
 
-GameObject* Player::createObject() {
-	return new Player();
-}
-
 void Player::startForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
@@ -499,4 +495,8 @@ void Player::downQuick(vector<GameObject*>& gameobjs, Direction d) {
 
 void Player::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 
+}
+
+GameObject* Player::createObject() {
+	return new Player(*this);
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 enum Controllers {
 	PLAYER1, 
 	PLAYER2, 
@@ -49,4 +52,11 @@ enum Animation {
 	SQUAT,
 	TURN, 
 	ANIMATIONS
+};
+
+struct sdl_deleter
+{
+	void operator()(SDL_Texture *p) const {
+		SDL_DestroyTexture(p);
+	}
 };

@@ -15,9 +15,9 @@ HookShot::HookShot(float xtemp, float ytemp, float xv, float yv, int g) {
 
 bool HookShot::draw(vector<GameObject*>& gameobjs) {
 	GameObject::draw(gameobjs);
-	xvel *= 0.9;
-	yvel *= 0.9;
-	yvel += 5;
+	xvel *= 0.99;
+	yvel *= 0.99;
+	yvel += 4;
 
 	frames++;
 
@@ -30,7 +30,7 @@ bool HookShot::draw(vector<GameObject*>& gameobjs) {
 void HookShot::customDraw(RenderWindow* window) {
 	if (!textureDraw) {
 		cout << "Texture loaded!\n";
-		texture = window->loadTexture("res/gfx/grapple.png");
+		setTexture(window->loadTexture("res/gfx/grapple.png"));
 		chain = window->loadTexture("res/gfx/chain.png");
 		fullPicSize();
 		show_width *= 2;
@@ -42,5 +42,5 @@ void HookShot::customDraw(RenderWindow* window) {
 }
 
 GameObject* HookShot::createObject() {
-	return new HookShot();
+	return new HookShot(*this);
 }

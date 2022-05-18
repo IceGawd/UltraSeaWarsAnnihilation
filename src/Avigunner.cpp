@@ -7,7 +7,7 @@ Avigunner::Avigunner() {
 }
 
 Avigunner::Avigunner(RenderWindow& window, Controllers p) : Player(AVIGUNNER, p) {
-	texture = window.loadTexture("res/gfx/Avigunner.png");
+	setTexture(window.loadTexture("res/gfx/Avigunner.png"));
 	width = 224;
 	height = 280;
 	show_width = 224;
@@ -175,7 +175,7 @@ void Avigunner::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 	cout << "hookshot" << endl;
 	float xtemp = x;
 	if (facingRight) {xtemp += 170;} else {}
-	gameobjs.push_back(new HookShot(xtemp, y + 150, 100 * d.magnitude * cos(d.angle), -100 * d.magnitude * sin(d.angle), playerNum));
+	gameobjs.push_back(new HookShot(xtemp, y + 150, 50 * d.magnitude * cos(d.angle), -50 * d.magnitude * sin(d.angle), playerNum));
 }
 
 void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
@@ -197,5 +197,5 @@ void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& inpu
 }
 
 GameObject* Avigunner::createObject() {
-	return new Avigunner();
+	return new Avigunner(*this);
 }

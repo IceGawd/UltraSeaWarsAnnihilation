@@ -10,7 +10,7 @@ Vanshlicer::Vanshlicer() {
 }
 
 Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER, p) {
-	texture = window.loadTexture("res/gfx/Vanshlicer.png");
+	setTexture(window.loadTexture("res/gfx/Vanshlicer.png"));
 	width = 255;
 	height = 250;
 	show_width = 255;
@@ -143,5 +143,5 @@ void Vanshlicer::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 }
 
 GameObject* Vanshlicer::createObject() {
-	return new Vanshlicer();
+	return new Vanshlicer(*this);
 }

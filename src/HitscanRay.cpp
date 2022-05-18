@@ -61,5 +61,5 @@ void HitscanRay::customDraw(RenderWindow* window) {
 }
 
 GameObject* HitscanRay::createObject() {
-	return new HitscanRay();
+	return new HitscanRay(*this);
 }

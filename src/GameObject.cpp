@@ -16,5 +16,5 @@ bool GameObject::draw(vector<GameObject*>& gameobjs) {
 }
 
 GameObject* GameObject::createObject() {
-	return new GameObject();
+	return new GameObject(*this);
 }

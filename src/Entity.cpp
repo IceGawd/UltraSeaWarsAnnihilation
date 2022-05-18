@@ -4,22 +4,30 @@
 
 using namespace std;
 
+/*
 Entity::~Entity() {
 	// cout << "lmao gone" << endl;
-	SDL_DestroyTexture(texture);
+	SDL_DestroyTexture(texture.get());
 }
+*/
 
 Entity::Entity() : x(0), y(0) {
 
 }
 
-Entity::Entity(float px, float py, SDL_Texture* ptexture, int pw, int ph) : x(px), y(py), texture(ptexture), width(pw), height(ph), show_width(pw), show_height(ph) {
+Entity::Entity(float px, float py, SDL_Texture* ptexture, int pw, int ph) : x(px), y(py), width(pw), height(ph), show_width(pw), show_height(ph) {
+	setTexture(ptexture);
 	setRect();
 }
 
-Entity::Entity(float px, float py, SDL_Texture* ptexture) : x(px), y(py), texture(ptexture) {
+Entity::Entity(float px, float py, SDL_Texture* ptexture) : x(px), y(py) {
+	setTexture(ptexture);
 	fullPicSize();
 	setRect();
+}
+
+void Entity::setTexture(SDL_Texture* ptexture) {
+	texture = shared_ptr<SDL_Texture>(ptexture, sdl_deleter());
 }
 
 // COPY CONSTRUCTOR
@@ -49,7 +57,7 @@ void Entity::setRect() {
 
 SDL_Point Entity::getsize() {
     SDL_Point size;
-    SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
+    SDL_QueryTexture(texture.get(), NULL, NULL, &size.x, &size.y);
     return size;
 }
 

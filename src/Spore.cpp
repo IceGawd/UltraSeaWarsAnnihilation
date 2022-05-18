@@ -92,7 +92,7 @@ void Spore::customDraw(RenderWindow* window) {
 		string give = "res/gfx/";
 		give += type;
 		give += ".png";
-		texture = window->loadTexture(give.c_str());
+		setTexture(window->loadTexture(give.c_str()));
 		textureDraw = true;
 	}
 	setRect();
@@ -100,5 +100,5 @@ void Spore::customDraw(RenderWindow* window) {
 }
 
 GameObject* Spore::createObject() {
-	return new Spore();
+	return new Spore(*this);
 }
