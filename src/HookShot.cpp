@@ -24,6 +24,9 @@ bool HookShot::draw(vector<GameObject*>& gameobjs) {
 	Player* owner = static_cast<Player*>(gameobjs.at(gameobjPlacement));
 	Player* toHit = static_cast<Player*>(gameobjs.at(1 - gameobjPlacement));
 
+	playerx = owner->x;
+	playery = owner->y;
+
 	int frameLag = ENDLAG + frames - LIFESPAN;
 	if (frameLag < 0) {
 		xvel *= 0.99;
@@ -68,13 +71,32 @@ void HookShot::customDraw(RenderWindow* window) {
 	if (!textureDraw) {
 		cout << "Texture loaded!\n";
 		setTexture(window->loadTexture("res/gfx/grapple.png"));
-		chain = window->loadTexture("res/gfx/chain.png");
+		chain = Entity(x, y, window->loadTexture("res/gfx/chain.png"));
+		chain.show_width *= SIZECHANGE;
+		chain.show_height *= SIZECHANGE;
 		fullPicSize();
 		show_width *= SIZECHANGE;
 		show_height *= SIZECHANGE;
 		textureDraw = true;
 		setRect();
 	}
+	float xdiff = playerx - x;
+	float ydiff = playery - y;
+
+	cout << "xdiff: " << xdiff << endl;
+	cout << "ydiff: " << ydiff << endl;
+
+	if (xdiff != 0) {
+		int times = sqrt(pow(xdiff, 2) + pow(ydiff, 2)) / chain.width;
+		chain.angle = atan(ydiff / xdiff);
+		cout << "chain angle: " << chain.angle << endl;
+		for (int z = 0; z < times; z++) {
+			chain.x = (playerx * (times - z) + z * x) / times;
+			chain.y = (playery * (times - z) + z * y) / times;
+			window->render(&chain);
+		}
+	}
+
 	// hitbox.draw(window, 255, 255, 0, 100);
 }
 

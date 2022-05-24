@@ -4,6 +4,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
+#include <math.h>
+#include <iostream>
 
 #include "Entity.hpp"
 

@@ -1,7 +1,4 @@
-#include <iostream>
-
 #include "RenderWindow.hpp"
-#include "Entity.hpp"
 
 using namespace std;
 
@@ -67,11 +64,30 @@ void RenderWindow::render(Entity* entity, bool stationary) {
 //		cout << "X: " << entity->x << "Y: " << entity->y << endl;
 
 		SDL_Rect dest = getDestRect(entity, stationary);
+		SDL_Rect src = entity->currentFrame;
 
 	//	cout << "x2: " << entity->getsize().x << endl;
 	//	cout << "y2: " << entity->getsize().y << endl;
+		if (entity->angle == 0) {
+			SDL_RenderCopy(renderer, entity->texture.get(), &src, &dest);
+		}
+		else {
+			/*
+			float c = cos(entity->angle);
+			float s = sin(entity->angle);
+			int w = dest.w;
+			int h = dest.h;
+			dest.w = c * w + s * h;
+			dest.h = c * h + s * w;
+			*/
 
-		SDL_RenderCopy(renderer, entity->texture.get(), &(entity->currentFrame), &dest);
+			SDL_Point center = SDL_Point();
+			center.x = src.w / 2;
+			center.y = src.h / 2;
+
+			cout << "angle: " << 180 * entity->angle / M_PI << endl;
+			SDL_RenderCopyEx(renderer, entity->texture.get(), &src, &dest, 180 * entity->angle / M_PI, &center, SDL_FLIP_NONE);			
+		}
 	}
 
 	entity->customDraw(this);

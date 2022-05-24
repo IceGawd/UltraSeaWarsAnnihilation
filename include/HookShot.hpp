@@ -9,10 +9,13 @@
 
 class HookShot : public GameObject {
 public:
+	int playerx;
+	int playery;
+
 	int gameobjPlacement;
 	Circle hitbox;
 	DamageInfo damageinfo;
-	SDL_Texture* chain; // MAKE A SHARED POINTER + DESTRUCTOR CALL I THINK IDK
+	Entity chain;
 	int frames = 0;
 	float magnitude;
 	const int LIFESPAN = 30;

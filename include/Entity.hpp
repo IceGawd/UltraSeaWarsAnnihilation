@@ -27,6 +27,7 @@ public:
 	int show_width;
 	int show_height;
 	bool textureDraw = true;
+	float angle = 0;
 	
 	int animationFrame = 0;
 	Animation animationtype = JAB;
