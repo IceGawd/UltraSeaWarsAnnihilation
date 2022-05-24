@@ -11,14 +11,19 @@ class HookShot : public GameObject {
 public:
 	int gameobjPlacement;
 	Circle hitbox;
+	DamageInfo damageinfo;
 	SDL_Texture* chain; // MAKE A SHARED POINTER + DESTRUCTOR CALL I THINK IDK
 	int frames = 0;
-	const int LIFESPAN = 60;
+	float magnitude;
+	const int LIFESPAN = 30;
+	const int ENDLAG = 10;
+	const float SIZECHANGE = 2;
 
 	HookShot();
-	HookShot(float xtemp, float ytemp, float xv, float yv, int g);
+	HookShot(float xtemp, float ytemp, float xv, float yv, int g, DamageInfo di);
 
 	bool draw(vector<GameObject*>& gameobjs);
 	void customDraw(RenderWindow* window);
+	inline float getMagnitude() {return xvel * xvel + yvel * yvel;} 
 	virtual GameObject* createObject();
 };

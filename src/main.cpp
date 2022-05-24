@@ -105,7 +105,7 @@ void getInputs(Player* player, const vector<GamePad>& controllerInputs) {
 }
 
 // COULD LEAD TO POTENTIAL BULLSHIT
-// UNKNOWN MEM LEAK
+// UNKNOWN SMALL MEM LEAK
 void deepCopy(vector<GameObject*>& vecFrom, vector<GameObject*>& vecTo) {
 	while (!vecTo.empty()) {
 		// cout << "Deleted: " << vecTo.back()->texture << endl;
