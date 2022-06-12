@@ -17,8 +17,8 @@ HookShot::HookShot(float xtemp, float ytemp, float xv, float yv, int g, DamageIn
 	hitbox = Circle(16 * SIZECHANGE, 16 * SIZECHANGE, 16 * SIZECHANGE);
 }
 
-bool HookShot::draw(vector<GameObject*>& gameobjs) {
-	GameObject::draw(gameobjs);
+bool HookShot::draw(vector<GameObject*>& gameobjs, Stage* stage) {
+	GameObject::draw(gameobjs, stage);
 	frames++;
 
 	Player* owner = static_cast<Player*>(gameobjs.at(gameobjPlacement));
@@ -80,22 +80,8 @@ void HookShot::customDraw(RenderWindow* window) {
 		textureDraw = true;
 		setRect();
 	}
-	float xdiff = playerx - x;
-	float ydiff = playery - y;
 
-	cout << "xdiff: " << xdiff << endl;
-	cout << "ydiff: " << ydiff << endl;
-
-	if (xdiff != 0) {
-		int times = sqrt(pow(xdiff, 2) + pow(ydiff, 2)) / chain.width;
-		chain.angle = atan(ydiff / xdiff);
-		cout << "chain angle: " << chain.angle << endl;
-		for (int z = 0; z < times; z++) {
-			chain.x = (playerx * (times - z) + z * x) / times;
-			chain.y = (playery * (times - z) + z * y) / times;
-			window->render(&chain);
-		}
-	}
+	particleTrails(playerx, playery, x, y, chain, window);
 
 	// hitbox.draw(window, 255, 255, 0, 100);
 }

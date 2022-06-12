@@ -41,199 +41,219 @@ void Player::zeroInitializeHitboxes() {
 }
 
 void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
+	Player* opponent = static_cast<Player*>(gameobjs.at(1 - playerNum));
+
 	onGround = false;
-	// cout << texture << endl;
-	// cout << "EL AM AY OW" << endl;
-	// cout << "x: " << x << " y: " << y << " xvel: " << xvel << " yvel: " << yvel << endl;
-	for (int tempnum = hitboxes.size() - 1; tempnum >= 0; tempnum--) {
-		Circle& c = hitboxes.at(tempnum);
-		float angle;
-		while (s->collidesWith(c)) {
-			// cout << "x: " << x << " y: " << y << " c.x: " << c.x << " c.y: " << c.y << " xvel: " << xvel << " yvel: " << yvel << endl;
-			angle = s->angleFrom(c.x, c.y, c.x - xvel, c.y - yvel);
-			// angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel - (2 * c.radius) + imageDimentions[animationtype][animationFrame][1]);
-			// angle = s->angleFrom(x - xvel + imageDimentions[animationtype][animationFrame][0] / 2, y - yvel + imageDimentions[animationtype][animationFrame][1] / 2);
-			// cout << "angel: " << angle << endl;
-			// cout << s->collidesWith(c) << endl;
 
-			if (abs(angle - M_PI / 2) < M_PI / 2) {
-				onGround = true;
+	if (hitlag <= 0) {
+		// cout << texture << endl;
+		// cout << "EL AM AY OW" << endl;
+		// cout << "x: " << x << " y: " << y << " xvel: " << xvel << " yvel: " << yvel << endl;
+		for (int tempnum = hitboxes.size() - 1; tempnum >= 0; tempnum--) {
+			Circle& c = hitboxes.at(tempnum);
+			float angle;
+			while (s->collidesWith(c)) {
+				// cout << "x: " << x << " y: " << y << " c.x: " << c.x << " c.y: " << c.y << " xvel: " << xvel << " yvel: " << yvel << endl;
+				angle = s->angleFrom(c.x, c.y, c.x - xvel, c.y - yvel);
+				// angle = s->angleFrom(x - xvel + getDimentions()[0] / 2, y - yvel - (2 * c.radius) + getDimentions()[1]);
+				// angle = s->angleFrom(x - xvel + getDimentions()[0] / 2, y - yvel + getDimentions()[1] / 2);
+				// cout << "angel: " << angle << endl;
+				// cout << s->collidesWith(c) << endl;
+
+				if (abs(angle - M_PI / 2) < M_PI / 2) {
+					onGround = true;
+				}
+				x += 5 * cos(angle);
+				y -= 5 * sin(angle);
+				c.x += 5 * cos(angle);
+				c.y -= 5 * sin(angle);
 			}
-			x += 5 * cos(angle);
-			y -= 5 * sin(angle);
-			c.x += 5 * cos(angle);
-			c.y -= 5 * sin(angle);
-		}
-		if (onGround) {
-			if (yvel > 0) {
-				yvel = 0;
-			}
-			x -= 5 * cos(angle);
-			y += 5 * sin(angle);
-			break;
-		}
-	}
-
-//	cout << previous << endl;
-
-	Player* opponent = static_cast<Player*>(gameobjs.at(1 - playerNum));;
-	if (onGround && !wasOnGround) {
-		if (!wasDown(previous) && wasDown(input.direction)) {
-			cout << "TECH: LLC\n";
-			lag = 0;
-			// TECH: Landing Lag Cancel
-		}
-		else {
-			lag = landinglag;
-			type = LAND;
-		}
-	}
-	if (invulnerability > 0) {
-		invulnerability--;
-		invulnFlash++;
-		if (invulnFlash > 2 * INVULNFLASHTIME) {
-			invulnFlash = 0;
-		}
-	}
-
-	if ((charge == 0) == (input.charge && charge <= CHARGEMAX)) {
-		cout << "power: " << charge << "\n";
-		attack(gameobjs, true, input.direction);
-	}
-
-	// cout << lag << endl;
-	if (lag <= 0 || type == DASH) {
-		if (lag > 0) {
-			lag--;
-		}
-
-		if (onGround && wasDown(input.direction)) {
-			xvel *= slowDown;
-		}
-		// ACTIVE
-		if (input.direction.magnitude > 0.75) {
-			bool rest = abs(xvel) < 0.1;
-			if (wasRight(input.direction)) {
-				if (onGround && ((!facingRight && (lag > 0 || rest)) || (facingRight && lag == 0 && wasNeutral(previous) && rest))) {
-					lag = dashframes;
-					type = DASH;
-					xvel += dashspeed;
-					facingRight = !facingRight;
-				}
-				else if (onGround && !facingRight && lag == 0) {
-					lag = turnAround;
-					type = TURNAROUND;
-				}
-				else {
-					xvel += walkspeed;
-				}
-			}
-			if (wasLeft(input.direction)) {
-				if (onGround && ((facingRight && (lag > 0 || rest)) || (!facingRight && lag == 0 && wasNeutral(previous) && rest))) {
-					lag = dashframes;
-					type = DASH;
-					xvel -= dashspeed;
-					facingRight = !facingRight;
-				}
-				else if (onGround && facingRight && lag == 0) {
-					lag = turnAround;
-					type = TURNAROUND;
-				}
-				else {
-					xvel -= walkspeed;
-				}
-			}
-		}
-		if (input.jump && !previousJump) {
 			if (onGround) {
-				lag = jumpSquat;
-				type = JUMP;
+				if (yvel > 0) {
+					yvel = 0;
+				}
+				x -= 5 * cos(angle);
+				y += 5 * sin(angle);
+				break;
+			}
+		}
+
+		// cout << previous << endl;
+
+		if (onGround && !wasOnGround) {
+			if (!wasDown(previous) && wasDown(input.direction)) {
+				cout << "TECH: LLC\n";
+				lag = 0;
+				// TECH: Landing Lag Cancel
 			}
 			else {
-				if (jumpsUsed < maxjumps) {
-					yvel = -jumpspeed;
-					jumpsUsed++;
+				lag = landinglag;
+				type = LAND;
+			}
+		}
+		if (invulnerability > 0) {
+			invulnerability--;
+			invulnFlash++;
+			if (invulnFlash > 2 * INVULNFLASHTIME) {
+				invulnFlash = 0;
+			}
+		}
+
+		if ((charge == 0) == (input.charge && charge <= CHARGEMAX)) {
+			cout << "power: " << charge << "\n";
+			attack(gameobjs, true, input.direction);
+		}
+
+		// cout << lag << endl;
+		if (lag <= 0 || type == DASH) {
+			if (lag > 0) {
+				lag--;
+			}
+
+			if (onGround && wasDown(input.direction)) {
+				xvel *= slowDown;
+			}
+			// ACTIVE
+			if (input.direction.magnitude > 0.75) {
+				bool rest = abs(xvel) < 0.1;
+				if (wasRight(input.direction)) {
+					if (onGround && ((!facingRight && (lag > 0 || rest)) || (facingRight && lag == 0 && wasNeutral(previous) && rest))) {
+						lag = dashframes;
+						type = DASH;
+						xvel += dashspeed;
+						facingRight = !facingRight;
+					}
+					else if (onGround && !facingRight && lag == 0) {
+						lag = turnAround;
+						type = TURNAROUND;
+					}
+					else {
+						xvel += walkspeed;
+					}
+				}
+				if (wasLeft(input.direction)) {
+					if (onGround && ((facingRight && (lag > 0 || rest)) || (!facingRight && lag == 0 && wasNeutral(previous) && rest))) {
+						lag = dashframes;
+						type = DASH;
+						xvel -= dashspeed;
+						facingRight = !facingRight;
+					}
+					else if (onGround && facingRight && lag == 0) {
+						lag = turnAround;
+						type = TURNAROUND;
+					}
+					else {
+						xvel -= walkspeed;
+					}
 				}
 			}
-		}
-//		cout << "Lag: " << lag << endl;
-		if (input.quick && !previousQuick) {
-			attack(gameobjs, false, input.direction);
-		}
-		if (input.charge) {
-			lag = 1;
-			type = CHARGE;
-		}
-	}
-	else {
-		lag--;
-
-		if (type == TURNAROUND) {
-			xvel /= 2;
-		}
-
-		if (lag == 0) {
-			switch (type) {
-				case CHARGE:
-					charge++;
-					lag = 1;
-					break;
-				case JUMP:
-					yvel = -jumpspeed;
-					if (!input.jump) {
-						yvel *= shorthop;
+			if (input.jump && !previousJump) {
+				if (onGround) {
+					lag = jumpSquat;
+					type = JUMP;
+				}
+				else {
+					if (jumpsUsed < maxjumps) {
+						yvel = -jumpspeed;
+						jumpsUsed++;
 					}
-					jumpsUsed++;
-					break;
-				case TURNAROUND:
-					facingRight = !facingRight;
-					break;
+				}
 			}
-			if (type == CHARGE) {
+			// cout << "Lag: " << lag << endl;
+			if (input.quick && !previousQuick) {
+				attack(gameobjs, false, input.direction);
+			}
+			if (input.charge) {
+				lag = 1;
 				type = CHARGE;
 			}
-			else {
-				type = NONE;
-			}
-		}
-	}
-
-	// ALWAYS HAPPEN
-	if (onGround) {
-		jumpsUsed = 1;
-		fastFalling = false;
-
-		xvel *= friction;
-		yvel *= friction;	
-	}
-	else {
-		if (!wasDown(previous) && wasDown(input.direction) && abs(yvel) < fallspeed) {
-			fastFalling = true;
-			// TECH: Fast Fall
-			cout << "TECH: FF\n";
-		}
-
-		if (fastFalling) {
-			yvel += fallspeed * fastFall;
-
-			if (!wasUp(previous) && wasUp(input.direction)) {
-				fastFalling = false;
-				// TECH : Fast Fall Cancel
-				cout << "TECH: FFC\n";
-			}
 		}
 		else {
-			yvel += fallspeed;
+			lag--;
+
+			if (type == TURNAROUND) {
+				xvel /= 2;
+			}
+			if (!onGround) {
+				xvel += cos(input.direction.angle) * input.direction.magnitude * walkspeed;
+			}
+
+			if (lag == 0) {
+				switch (type) {
+					case CHARGE:
+						charge++;
+						lag = 1;
+						if (!onGround) {
+							// Extra drag when charging in the air
+							xvel *= drag;
+							yvel *= drag;
+						}
+						break;
+					case JUMP:
+						yvel = -jumpspeed;
+						if (!input.jump) {
+							yvel *= shorthop;
+						}
+						jumpsUsed++;
+						break;
+					case TURNAROUND:
+						facingRight = !facingRight;
+						break;
+				}
+				if (type != CHARGE) {
+					type = NONE;
+				}
+			}
 		}
 
-		xvel *= drag;
-		yvel *= drag;
+		// ALWAYS HAPPEN
+		if (onGround) {
+			jumpsUsed = 1;
+			fastFalling = false;
+
+			xvel *= friction;
+			yvel *= friction;	
+		}
+		else {
+			if (!wasDown(previous) && wasDown(input.direction) && abs(yvel) < fallspeed) {
+				fastFalling = true;
+				// TECH: Fast Fall
+				cout << "TECH: FF\n";
+			}
+
+			if (fastFalling) {
+				yvel += fallspeed * fastFall;
+
+				if (!wasUp(previous) && wasUp(input.direction)) {
+					fastFalling = false;
+					// TECH : Fast Fall Cancel
+					cout << "TECH: FFC\n";
+				}
+			}
+			else {
+				yvel += fallspeed;
+			}
+
+			xvel *= drag;
+			yvel *= drag;
+		}
+	}
+	else {
+		// Hitlag options
+		hitlag--;
+		if (wasNeutral(previous) && wasDown(input.direction)) {
+			fastFalling = true;
+		}
+		if (wasNeutral(previous) && wasUp(input.direction)) {
+			fastFalling = false;
+		}
+		
 	}
 
 	previous = input.direction;
 	wasOnGround = onGround;
 
-//	cout << type << endl;
+	// cout << type << endl;
 
 	switch (type) {
 		case NONE:
@@ -258,7 +278,7 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 				animationFrame = 8 - lag;
 			}
 			else {
-//				animationFrame = lag + 4;
+				// animationFrame = lag + 4;
 			}
 			break;
 /*
@@ -291,19 +311,19 @@ void Player::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) 
 			c.x += c.basex;
 		}
 		else {
-			c.x += imageDimentions[animationtype][animationFrame][0] - c.basex;
+			c.x += getDimentions()[0] - c.basex;
 		}
 
 		if (c.attack) {
 			if (opponent->collides(c)) {
-//				cout << "a\n";
-//				cout << &c << endl;
-//				cout << c.onHit << endl;
-//				cout << c.onHit->angle << endl;
+				// cout << "a\n";
+				// cout << &c << endl;
+				// cout << c.onHit << endl;
+				// cout << c.onHit->angle << endl;
 				c.onHit.setAngle(c.onHit.angle, opponent->angleBetween(c.x, c.y), opponent->previous);
-//				cout << "b\n";
+				// cout << "b\n";
 				opponent->damage(c.onHit, this);
-//				cout << "c\n";
+				// cout << "c\n";
 			}
 		}
 	}
@@ -343,7 +363,7 @@ Circle* Player::collides(Circle& c2) {
 }
 
 float Player::angleBetween(int tempx, int tempy) {
-	vector<int>& iTemp = imageDimentions[animationtype][animationFrame]; // Apples chest moment
+	vector<int>& iTemp = getDimentions(); // Apples chest moment
 	int anglex = x + (iTemp[0] / 2) - tempx;
 	int angley = y + (iTemp[1] / 2) - tempy;
 	float angle;
@@ -397,7 +417,12 @@ void Player::damage(DamageInfo& damageinfo, Player* attacker) {
 
 		invulnerability = damageinfo.invulnerability;
 
+		if (type != HIT) {
+			lag = 0;
+		}
+
 		lag = totalKnockback * hitstunModifier + 1;
+		hitlag += damageinfo.damage * staled / 3 + damageinfo.invulnerability;
 		type = HIT;
 		
 //		cout << "ending angle: " << damageinfo.angle << endl;
@@ -431,6 +456,12 @@ void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 					startBackCharge(gameobjs, d);
 				}
 			}
+			else {
+				if (wasUp(d)) {
+					inUse = UpCharge;
+					startUpCharge(gameobjs, d);
+				}
+			}
 		}
 		else {
 			// RELEASE CHARGE
@@ -440,6 +471,9 @@ void Player::attack(vector<GameObject*>& gameobjs, bool charge, Direction d) {
 			}
 			if (inUse == BackCharge) {
 				releaseBackCharge(gameobjs, d);
+			}
+			if (inUse == UpCharge) {
+				releaseUpCharge(gameobjs, d);
 			}
 
 			this->charge = 0;
@@ -477,11 +511,19 @@ void Player::startBackCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
 
+void Player::startUpCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
 void Player::releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
 
 void Player::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Player::releaseUpCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
 
@@ -495,6 +537,10 @@ void Player::downQuick(vector<GameObject*>& gameobjs, Direction d) {
 
 void Player::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 
+}
+
+void Player::secondStick(vector<GameObject*>& gameobjs, Direction d) {
+	
 }
 
 GameObject* Player::createObject() {

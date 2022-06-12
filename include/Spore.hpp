@@ -19,7 +19,7 @@ public:
 
 	const float friction = 0.7;
 
-	bool draw(vector<GameObject*>& gameobjs);
+	bool draw(vector<GameObject*>& gameobjs, Stage* stage);
 	void customDraw(RenderWindow* window);
 	virtual GameObject* createObject();
 };

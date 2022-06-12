@@ -34,7 +34,7 @@ void applyFrame(vector<GameObject*>& gameobjs, Stage* stage, Inputs& player1, In
 	static_cast<Player*>(gameobjs.at(1))->applyFrame(gameobjs, stage, player2);
 	for (int x = 0; x < gameobjs.size(); x++) {
 		// cout << "X: " << x << endl;
-		bool dead = gameobjs.at(x)->draw(gameobjs); // Add stage (nightmare)
+		bool dead = gameobjs.at(x)->draw(gameobjs, stage);
 		if (dead) {
 			// cout << "death\n";
 			delete gameobjs.at(x);
@@ -123,6 +123,10 @@ void runGame() {
 	vector<GamePad> controllerInputs;
 	int numGamepads;
 	const int FPS = 60;
+	const int WIDTH = 1280;
+	const int HEIGHT = 720;
+	// const int MAX_CAMERA_VEL = 30;
+	const float USABLE_SCREEN = 0.4;
 
 	unordered_map<SDL_Keycode, SDL_GameControllerButton> keymap = {
 		{SDLK_LSHIFT, SDL_CONTROLLER_BUTTON_LEFTSTICK}, 
@@ -183,16 +187,15 @@ void runGame() {
 		}
 	}
 
-
-	RenderWindow window("Ultra Sea Wars Annihilation", 1280, 720);
+	RenderWindow window("Ultra Sea Wars Annihilation", WIDTH, HEIGHT);
 	bool gameRunning = true;
 	bool gameplaying = true;
 	SDL_Event event;
 
-	Entity* background = new Entity(0, 0, window.loadTexture("res/gfx/back.png"), 1280, 720);
+	Entity* background = new Entity(0, 0, window.loadTexture("res/gfx/back.png"), WIDTH, HEIGHT);
 	Stage* stage = new Stage(Circle(600, 500, 1000), window.loadTexture("res/gfx/ScuBattlefield.png"));
 
-	vector<GameObject*> gameobjs = {new Avigunner(window, PLAYER1), new Vanshlicer(window, PLAYER2)}; // INITIALIZE HERE (FIRST TWO ELEMENTS ARE ALWAYS PLAYERS)
+	vector<GameObject*> gameobjs = {new Avigunner(window, PLAYER1), new Avigunner(window, PLAYER2)}; // INITIALIZE HERE (FIRST TWO ELEMENTS ARE ALWAYS PLAYERS)
 	vector<GameObject*> rollbackpoint;
 	deepCopy(gameobjs, rollbackpoint);
 
@@ -400,50 +403,32 @@ void runGame() {
 			}
 
 			// --- CAMERA ---
-			window.x = 2 * min(player1->x, player2->x) - max(player1->x + player1->show_width, player2->x + player2->show_width);
-			window.y = 2 * min(player1->y, player2->y) - max(player1->y + player1->show_height, player2->y + player2->show_height);
-			window.zoom = 300.0 /  max(abs(player1->x - player2->x), abs(player1->y - player2->y));
-			/*
-			SDL_Rect actualPlaces[2] = {window.getDestRect(player1), window.getDestRect(player2)};
-			for (SDL_Rect& r : actualPlaces) {
-				if (r.x < 200) {
-					window.x -= sqrt(200 - r.x);
-					window.zoom -= window.zoom / 1000.0;
-				}
-				else if (r.x > 1000) {
-					window.x += sqrt(r.x - 1000);
-					window.zoom -= window.zoom / 1000.0;					
-				}
-				else {
-					window.zoom += window.zoom / 10000.0;
-				}
-				if (r.y < 200) {
-					window.y -= sqrt(200 - r.y);
-					window.zoom -= window.zoom / 1000.0;
-				}
-				else if (r.y > 1000) {
-					window.y += sqrt(r.y - 1000);
-					window.zoom -= window.zoom / 1000.0;					
-				}
-				else {
-					window.zoom += window.zoom / 10000.0;
-				}
-				if ((r.x < 0) || (r.x + r.w > 1200) || (r.y < 0) || (r.y + r.h > 1200)) {
-					window.zoom -= window.zoom / 500.0;	
-				}
-			}
-			*/
+			//float nextzoom = 1;
+			float nextzoom = pow(max(abs(player1->x - player2->x) / WIDTH, abs(player1->y - player2->y) / HEIGHT), -1) * USABLE_SCREEN;
+			int nextx = (player1->x + player2->x - WIDTH / window.zoom + (player1->getDimentions()[0] + player2->getDimentions()[0]) / 2.0) / 2.0;
+			int nexty = (player1->y + player2->y - HEIGHT / window.zoom + (player1->getDimentions()[1] + player2->getDimentions()[1]) / 2.0) / 2.0;
+
+			// cout << "XVEL: " << (nextx - window.x) / 2 << endl;
+			// cout << "YVEL: " << (nexty - window.y) / 2 << endl;
+
+			window.x = (window.x + nextx) / 2;
+			window.y = (window.y + nexty) / 2;
+			window.zoom = (window.zoom + nextzoom) / 2;
+
+			// cout << "ZOOM: " << window.zoom << endl;
+
 			if (window.zoom < 0.5) {
 				window.zoom = 0.5;
 			}
-			if (window.zoom > 1) {
-				window.zoom = 1;
+			if (window.zoom > 1.5) {
+				window.zoom = 1.5;
 			}
+
 			if (abs(window.x) > 900) {
 				window.x = 900 * abs(window.x) / window.x;
 			}
-			if (abs(window.y) > 600) {
-				window.y = 600 * abs(window.y) / window.y;
+			if (abs(window.y) > 300) {
+				window.y = 300 * abs(window.y) / window.y;
 			}
 			
 

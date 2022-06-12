@@ -8,7 +8,7 @@ GameObject::GameObject() {
 	
 }
 
-bool GameObject::draw(vector<GameObject*>& gameobjs) {
+bool GameObject::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 	x += xvel;
 	y += yvel;
 

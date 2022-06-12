@@ -37,14 +37,14 @@ Spore::Spore(float xtemp, float ytemp, float xv, float yv, int s, int e, int g, 
 	type = t;
 }
 
-bool Spore::draw(vector<GameObject*>& gameobjs) {
+bool Spore::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 	xvel *= friction;
 	yvel *= friction;
 
 	Player* owner = static_cast<Player*>(gameobjs.at(gameobjPlacement));
 	Player* toHit = static_cast<Player*>(gameobjs.at(1 - gameobjPlacement));
 
-	GameObject::draw(gameobjs);
+	GameObject::draw(gameobjs, stage);
 	survivalFrames--;
 	hitbox.x = hitbox.basex + x;
 	hitbox.y = hitbox.basey + y;

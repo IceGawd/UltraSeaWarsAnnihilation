@@ -100,6 +100,11 @@ void Avigunner::startBackCharge(vector<GameObject*>& gameobjs, Direction d) {
 	type = ATTACK;
 }
 
+void Avigunner::startUpCharge(vector<GameObject*>& gameobjs, Direction d) {
+	lag = 3;
+	type = ATTACK;
+}
+
 void Avigunner::releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
 	lag = 5;
 	type = ATTACK;
@@ -161,6 +166,13 @@ void Avigunner::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
 	}
 }
 
+void Avigunner::releaseUpCharge(vector<GameObject*>& gameobjs, Direction d) {
+	yvel = -20 * sqrt(charge);
+	storedCharges = charge / 10 - 1;
+	lag = ROCKETTIMER;
+	type = FREEFALL;
+}
+
 void Avigunner::forwardQuick(vector<GameObject*>& gameobjs, Direction d) {
 	lag = 8;
 	type = ATTACK;
@@ -181,6 +193,10 @@ void Avigunner::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 	gameobjs.push_back(new HookShot(xtemp, y + 150, 50 * d.magnitude * cos(d.angle), -50 * d.magnitude * sin(d.angle), playerNum, DamageInfo(8, 90, 0.6, 3)));
 }
 
+void Avigunner::secondStick(vector<GameObject*>& gameobjs, Direction d) {
+	
+}
+
 void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
 	if (type == ATTACK) {
 		if (inUse == ForwardQuick && lag == 5) {
@@ -193,6 +209,16 @@ void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& inpu
 			DamageInfo di = DamageInfo(3, 60, 0.4, 3);
 			di.angle = M_PI / 2;
 			gameobjs.push_back(new Spore(x, y + imageDimentions[animationtype][animationFrame][1], 0, 0, 100, 10, playerNum, di, "Mine"));			
+		}
+	}
+	if (type == FREEFALL && storedCharges > 0 && lag == 1) {
+		yvel -= storedCharges * 10;
+		storedCharges--;
+		if (storedCharges == 0) {
+			lag = 9999;
+		}
+		else {
+			lag = ROCKETTIMER;
 		}
 	}
 	

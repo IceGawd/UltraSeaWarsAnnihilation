@@ -51,6 +51,7 @@ public:
 	int jumpsUsed = 0;
 	int charge = 0;
 	int lag = 0;
+	int hitlag = 0;
 	Lag type = NONE;
 	bool onGround = false;
 	bool wasOnGround = false;
@@ -72,11 +73,15 @@ public:
 
 	virtual void startForwardCharge(vector<GameObject*>& gameobjs, Direction d);
 	virtual void startBackCharge(vector<GameObject*>& gameobjs, Direction d);
+	virtual void startUpCharge(vector<GameObject*>& gameobjs, Direction d);
 	virtual void releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d);
 	virtual void releaseBackCharge(vector<GameObject*>& gameobjs, Direction d);
+	virtual void releaseUpCharge(vector<GameObject*>& gameobjs, Direction d);
 	virtual void forwardQuick(vector<GameObject*>& gameobjs, Direction d);
 	virtual void downQuick(vector<GameObject*>& gameobjs, Direction d);
 	virtual void forwardAerial(vector<GameObject*>& gameobjs, Direction d);
+
+	virtual void secondStick(vector<GameObject*>& gameobjs, Direction d);
 
 	Player();
 	Player(Character c, Controllers p);
@@ -108,5 +113,9 @@ public:
 
 	inline bool wasNeutral(Direction& d) {
 		return d.magnitude < minMagnitude;
+	}
+
+	inline vector<int>& getDimentions() {
+		return imageDimentions[animationtype][animationFrame];
 	}
 };

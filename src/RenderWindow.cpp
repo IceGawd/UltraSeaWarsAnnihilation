@@ -85,7 +85,7 @@ void RenderWindow::render(Entity* entity, bool stationary) {
 			center.x = src.w / 2;
 			center.y = src.h / 2;
 
-			cout << "angle: " << 180 * entity->angle / M_PI << endl;
+			// cout << "angle: " << 180 * entity->angle / M_PI << endl;
 			SDL_RenderCopyEx(renderer, entity->texture.get(), &src, &dest, 180 * entity->angle / M_PI, &center, SDL_FLIP_NONE);			
 		}
 	}

@@ -120,11 +120,19 @@ void Vanshlicer::startBackCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
 
+void Vanshlicer::startUpCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
 void Vanshlicer::releaseForwardCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
 
 void Vanshlicer::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
+
+}
+
+void Vanshlicer::releaseUpCharge(vector<GameObject*>& gameobjs, Direction d) {
 
 }
 
@@ -139,6 +147,10 @@ void Vanshlicer::downQuick(vector<GameObject*>& gameobjs, Direction d) {
 }
 
 void Vanshlicer::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
+	
+}
+
+void Vanshlicer::secondStick(vector<GameObject*>& gameobjs, Direction d) {
 	
 }
 

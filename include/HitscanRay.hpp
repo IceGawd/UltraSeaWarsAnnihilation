@@ -12,7 +12,7 @@ class HitscanRay : public GameObject {
 public:
 	HitscanRay();
 	HitscanRay(float x, float y, float a, int g, DamageInfo di);
-	bool draw(vector<GameObject*>& gameobjs);
+	bool draw(vector<GameObject*>& gameobjs, Stage* stage);
 	int fixIt(int i);
 	void customDraw(RenderWindow* window);
 

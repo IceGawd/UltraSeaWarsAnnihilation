@@ -12,7 +12,7 @@ int HitscanRay::fixIt(int i) {
 	return (int) (510 * ((atan((i / 30.0) - 4) / M_PI) + 0.5));
 }
 
-bool HitscanRay::draw(vector<GameObject*>& gameobjs) {
+bool HitscanRay::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 	if (frames == 0) {
 		textureDraw = false;
 //		cout << "goteem\n";

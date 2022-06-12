@@ -6,6 +6,7 @@
 #include "RenderWindow.hpp"
 #include "Circle.hpp"
 #include "Player.hpp"
+#include "utils.hpp"
 
 class HookShot : public GameObject {
 public:
@@ -25,7 +26,7 @@ public:
 	HookShot();
 	HookShot(float xtemp, float ytemp, float xv, float yv, int g, DamageInfo di);
 
-	bool draw(vector<GameObject*>& gameobjs);
+	bool draw(vector<GameObject*>& gameobjs, Stage* stage);
 	void customDraw(RenderWindow* window);
 	inline float getMagnitude() {return xvel * xvel + yvel * yvel;} 
 	virtual GameObject* createObject();

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Entity.hpp"
+#include "Stage.hpp"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ public:
 	float xvel = 0;
 	float yvel = 0;
 
-	virtual bool draw(vector<GameObject*>& gameobjs);
+	virtual bool draw(vector<GameObject*>& gameobjs, Stage* stage);
 
 	virtual GameObject* createObject();
 };

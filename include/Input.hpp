@@ -44,7 +44,8 @@ enum Lag {
 	ATTACK,
 	LAND,
 	CHARGE, 
-	DASH
+	DASH, 
+	FREEFALL
 };
 
 enum Animation {
