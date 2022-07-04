@@ -13,14 +13,14 @@ Avigunner::Avigunner(RenderWindow& window, Controllers p) : Player(AVIGUNNER, p)
 	show_width = 224;
 	show_height = 280;
 	walkspeed = 4;
-	dashspeed = 30;
+	dashspeed = 40;
 	dashframes = 9;
 	jumpspeed = 120;
 	fallspeed = 6;
 	jumpSquat = 4;
 	shorthop = 0.4f;
-	drag = 0.8f;
-	friction = 0.85f;
+	drag = 0.75f;
+	friction = 0.9f;
 	fastFall = 3.0f;
 	slowDown = 0.95f;
 	maxjumps = 2;
@@ -167,7 +167,7 @@ void Avigunner::releaseBackCharge(vector<GameObject*>& gameobjs, Direction d) {
 }
 
 void Avigunner::releaseUpCharge(vector<GameObject*>& gameobjs, Direction d) {
-	yvel = -20 * sqrt(charge);
+	yvel = -25 * sqrt(charge);
 	storedCharges = charge / 10 - 1;
 	lag = ROCKETTIMER;
 	type = FREEFALL;
@@ -194,7 +194,13 @@ void Avigunner::forwardAerial(vector<GameObject*>& gameobjs, Direction d) {
 }
 
 void Avigunner::secondStick(vector<GameObject*>& gameobjs, Direction d) {
-	
+	if (!hookOut) {
+		hookOut = true;
+
+		float xtemp = x;
+		if (facingRight) {xtemp += 170;} else {}
+		gameobjs.push_back(new GrapplingHook(xtemp, y + 150, 50 * d.magnitude * cos(d.angle), -50 * d.magnitude * sin(d.angle), playerNum));
+	}
 }
 
 void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input) {
@@ -212,7 +218,7 @@ void Avigunner::applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& inpu
 		}
 	}
 	if (type == FREEFALL && storedCharges > 0 && lag == 1) {
-		yvel -= storedCharges * 10;
+		yvel -= storedCharges * 15;
 		storedCharges--;
 		if (storedCharges == 0) {
 			lag = 9999;

@@ -6,10 +6,12 @@
 #include "Moves.hpp"
 #include "HitscanRay.hpp"
 #include "Spore.hpp"
+#include "GrapplingHook.hpp"
 #include "HookShot.hpp"
 
 class Avigunner : public Player {
 public:
+	bool hookOut = false;
 	int storedCharges = 0;
 	const int ROCKETTIMER = 10;
 

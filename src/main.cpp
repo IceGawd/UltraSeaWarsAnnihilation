@@ -49,27 +49,14 @@ void localInputs(Player* player, const GamePad& controllerInput) {
 	Inputs thisFrame;
 	float xaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTX] / 32768.0;
 	float yaxis = controllerInput.axis[SDL_CONTROLLER_AXIS_LEFTY] / 32768.0;
-//	cout << xaxis << endl;
+	float xaxis2 = controllerInput.axis[SDL_CONTROLLER_AXIS_RIGHTX] / 32768.0;
+	float yaxis2 = controllerInput.axis[SDL_CONTROLLER_AXIS_RIGHTY] / 32768.0;
 
-	if (xaxis == 0) {
-		if (yaxis >= 0) {
-			// cout << "up" << endl;
-			thisFrame.direction.angle = M_PI / -2.0;
-		}
-		else {
-			// cout << "down" << endl;
-			thisFrame.direction.angle = M_PI / 2.0;			
-		}
-	}
-	else if (xaxis > 0) {
-		thisFrame.direction.angle = -atan(yaxis / xaxis);
-	}
-	else {
-		thisFrame.direction.angle = M_PI - atan(yaxis / xaxis);
-	}
+	thisFrame.direction = directionFromCoords(xaxis, yaxis);
+	thisFrame.secondStick = directionFromCoords(xaxis2, yaxis2);
 
-
-	thisFrame.direction.magnitude = sqrt(xaxis * xaxis + yaxis * yaxis);
+	// cout << thisFrame.direction.angle << endl;
+	// cout << thisFrame.direction.magnitude << endl;
 
 	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_A]) {
 		thisFrame.quick = true;
@@ -84,6 +71,7 @@ void localInputs(Player* player, const GamePad& controllerInput) {
 		thisFrame.shield = true;
 	}
 	if (controllerInput.buttons[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] || controllerInput.buttons[SDL_CONTROLLER_BUTTON_RIGHTSHOULDER]) {
+		// cout << "tech\n";
 		thisFrame.tech = true;
 	}
 

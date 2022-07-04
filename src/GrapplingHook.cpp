@@ -13,10 +13,41 @@ GrapplingHook::GrapplingHook(float xtemp, float ytemp, float xv, float yv, int g
 }
 
 bool GrapplingHook::draw(vector<GameObject*>& gameobjs, Stage* stage) {
+	Avigunner* owner = static_cast<Avigunner*>(gameobjs.at(gameobjPlacement));
+
 	hitbox.x = hitbox.basex + x;
 	hitbox.y = hitbox.basey + y;
 
-	return true;
+	if (stage->collidesWith(hitbox) && state == 0) {
+		state = 1;
+	}
+
+	if (state >= 1 && owner->previous.tech) {
+		state = 3;
+	}
+	if (state == 1) {
+		owner->xvel += xvel;
+		owner->yvel += yvel;
+		xvel = 0;
+		yvel = 0;
+
+		if (owner->collides(hitbox)) {
+			state = 2;
+		}
+	}
+	if (state == 2) {
+		owner->ableToMove = false;
+		if (owner->previous.direction.magnitude > owner->moveMagnitude) {
+			state = 3;
+		}
+	}
+	
+	if (state == 3) {
+		owner->ableToMove = true;
+		owner->hookOut = false;
+	}
+
+	return state < 3;
 }
 
 /*
@@ -43,4 +74,8 @@ void GrapplingHook::customDraw(RenderWindow* window) {
 		textureDraw = true;
 		setRect();
 	}
+}
+
+GameObject* GrapplingHook::createObject() {
+	return new GrapplingHook(*this);
 }

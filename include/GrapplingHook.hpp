@@ -1,5 +1,7 @@
+#pragma once
 
 #include "GameObject.hpp"
+#include "Avigunner.hpp"
 #include "DamageInfo.hpp"
 #include "RenderWindow.hpp"
 #include "Circle.hpp"
@@ -8,6 +10,7 @@
 class GrapplingHook : public GameObject {
 public:
 	int gameobjPlacement;
+	int state = 0; // 0 Moving, 1 Pulling, 2 Locked, 3 Removed
 	Circle hitbox;
 	Entity chain;
 	const int LIFESPAN = 30;
@@ -18,4 +21,6 @@ public:
 	
 	bool draw(vector<GameObject*>& gameobjs, Stage* stage);
 	void customDraw(RenderWindow* window);
+
+	virtual GameObject* createObject();
 };

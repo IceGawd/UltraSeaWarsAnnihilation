@@ -1,7 +1,9 @@
-#pragma once
+#ifndef INPUT_H
+#define INPUT_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <math.h>
 
 enum Controllers {
 	PLAYER1, 
@@ -13,10 +15,13 @@ enum Controllers {
 struct Direction {
 	float angle = 0;
 	float magnitude = 0;
+
+	Direction operator-(const Direction& d);
 };
 
 struct Inputs {
 	Direction direction;
+	Direction secondStick;
 	bool quick = false;
 	bool charge = false;
 	bool jump = false;
@@ -61,3 +66,5 @@ struct sdl_deleter
 		SDL_DestroyTexture(p);
 	}
 };
+
+#endif

@@ -57,19 +57,23 @@ public:
 	bool wasOnGround = false;
 	bool facingRight = true;
 	bool fastFalling = false;
+	bool ableToMove = true;
 	int invulnerability = 0;
 	double percent = 0;
 	Move inUse;
 	int attackNumber = 0;
 	int lastAttackNumHitBy = -1;
 
-	Direction previous;
-	bool previousJump;
-	bool previousQuick;
+	Inputs previous;
 	static constexpr float minMagnitude = 0.1f;
+	static constexpr float moveMagnitude = 0.75f;
 	static const int INVULNFLASHTIME = 1;
 	static const int CHARGEMAX = 120;
+	static const int TECHWINDOW = 7;
+	static const int TECHLOCKOUT = 30;
 	static constexpr float SQRT2 = (float) sqrt(2);
+
+	int techFrames = TECHWINDOW;
 
 	virtual void startForwardCharge(vector<GameObject*>& gameobjs, Direction d);
 	virtual void startBackCharge(vector<GameObject*>& gameobjs, Direction d);
@@ -88,6 +92,7 @@ public:
 	void spawn();
 	void zeroInitializeHitboxes();
 	virtual void applyFrame(vector<GameObject*>& gameobjs, Stage* s, Inputs& input);
+	virtual bool draw(vector<GameObject*>& gameobjs, Stage* stage);
 	Circle* collides(int x, int y);
 	Circle* collides(Circle& c2);
 	float angleBetween(int tempx, int tempy);

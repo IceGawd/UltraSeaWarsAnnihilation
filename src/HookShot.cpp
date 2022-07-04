@@ -44,14 +44,14 @@ bool HookShot::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 	Circle* c = toHit->collides(hitbox);
 	if (c != nullptr) {
 		if (xvel != 0) {
-			damageinfo.setAngle(acos(xvel / abs(xvel)), atan(yvel / xvel), toHit->previous);
+			damageinfo.setAngle(acos(xvel / abs(xvel)), atan(yvel / xvel), toHit->previous.direction);
 		}
 		else {			
 			if (yvel > 0) {
-				damageinfo.setAngle(M_PI / 2, M_PI / 2, toHit->previous);
+				damageinfo.setAngle(M_PI / 2, M_PI / 2, toHit->previous.direction);
 			}
 			else {
-				damageinfo.setAngle(M_PI / -2, M_PI / -2, toHit->previous);
+				damageinfo.setAngle(M_PI / -2, M_PI / -2, toHit->previous.direction);
 			}
 		}
 		// float magni2 = getMagnitude() / magnitude;
@@ -61,7 +61,10 @@ bool HookShot::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 		// damageinfo.modifier *= magni2;
 		// damageinfo.damage *= magni2;
 		toHit->damage(damageinfo, owner);
-		frames = LIFESPAN - ENDLAG;
+		if (owner->techFrames < owner->TECHWINDOW) {
+			// cout << "LMAO\n";
+			frames = LIFESPAN - ENDLAG;
+		}
 	}
 
 	return frames > LIFESPAN;

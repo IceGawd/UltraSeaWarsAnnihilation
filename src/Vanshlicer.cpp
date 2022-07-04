@@ -16,7 +16,7 @@ Vanshlicer::Vanshlicer(RenderWindow& window, Controllers p) : Player(VANSHLICER,
 	show_width = 255;
 	show_height = 250;
 	walkspeed = 3;
-	dashspeed = 35;
+	dashspeed = 50;
 	dashframes = 11;
 	jumpspeed = 100;
 	fallspeed = 5;

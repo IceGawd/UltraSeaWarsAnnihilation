@@ -32,7 +32,7 @@ bool HitscanRay::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 			desty += ychange;
 			Circle* c = toHit->collides(destx, desty);
 			if (c != nullptr) {
-				damageinfo.setAngle(angle, atan((originy - c->y) / (originx - c->x)), toHit->previous);
+				damageinfo.setAngle(angle, atan((originy - c->y) / (originx - c->x)), toHit->previous.direction);
 				toHit->damage(damageinfo, owner);
 				break;
 			}

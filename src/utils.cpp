@@ -18,3 +18,23 @@ void particleTrails(int startx, int starty, int endx, int endy, Entity& particle
 		}
 	}
 }
+
+Direction directionFromCoords(float x, float y) {
+	Direction direction;
+	if (x == 0) {
+		if (y >= 0) {
+			direction.angle = M_PI / -2.0;
+		}
+		else {
+			direction.angle = M_PI / 2.0;			
+		}
+	}
+	else if (x > 0) {
+		direction.angle = -atan(y / x);
+	}
+	else {
+		direction.angle = M_PI - atan(y / x);
+	}
+	direction.magnitude = sqrt(x * x + y * y);
+	return direction;
+}

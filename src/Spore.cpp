@@ -65,7 +65,7 @@ bool Spore::draw(vector<GameObject*>& gameobjs, Stage* stage) {
 		if (survivalFrames + explosionLength > 0) {
 			Circle* c = toHit->collides(hitbox);
 			if (c != nullptr) {
-				damageinfo.setAngle(damageinfo.angle, atan((y - c->y) / (x - c->x)), toHit->previous);
+				damageinfo.setAngle(damageinfo.angle, atan((y - c->y) / (x - c->x)), toHit->previous.direction);
 				toHit->damage(damageinfo, owner);
 				survivalFrames = -explosionLength;
 			}
